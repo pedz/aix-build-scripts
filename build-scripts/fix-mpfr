@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Script used after mpfr has been built for 32 bit and 64 bit to create
+# the combined library and header file.
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+echo "This hasn't been ported yet"
+exit 1
+
+"${build_scripts}/Journal" "fix-mpfr called"
+
+rm -rf /tmp/temp
+mkdir /tmp/temp
+EXT=$( echo ${PUBLIC_BASE}/build/mpfr*-32bit/.libs/libmpfr.so.* | sed -e 's/.*libmpfr\.//' )
+cp ${PUBLIC_BASE}/build/mpfr-*-32bit/.libs/libmpfr.${EXT} /tmp/temp/libmpfr32.${EXT}
+cp ${PUBLIC_BASE}/build/mpfr-*-64bit/.libs/libmpfr.${EXT} /tmp/temp/libmpfr64.${EXT}
+cd /tmp/temp
+ar -X32_64 cr libmpfr.a libmpfr*.${EXT}
+rm ${PUBLIC_BASE}/lib/libmpfr.a
+cp libmpfr.a ${PUBLIC_BASE}/lib
+cd /
+rm -rf /tmp/temp

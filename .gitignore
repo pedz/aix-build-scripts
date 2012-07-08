@@ -1,0 +1,8 @@
+build-scripts/journal.log
+build/*
+destdir/*
+images/*
+logs/*
+src/*
+temp/*
+tmp/*

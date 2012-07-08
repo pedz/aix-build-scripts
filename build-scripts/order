@@ -1,0 +1,53 @@
+# From Steve: My build order is: make, gmp, mpfr, mpc, libsigsegv, m4,
+# bison, flex, gcc, libiconv, gettext libiconv (again), pkg-config,
+# diffutils, libtool, zlib, bzip2, readline, pcre, glib, popt,
+#
+# The order I'm going to use is:
+
+make,http://mirrors.kernel.org/gnu/make/make-3.82.tar.bz2
+sed,http://mirrors.kernel.org/gnu/sed/sed-4.2.1.tar.gz
+bash,http://mirrors.kernel.org/gnu/bash/bash-4.2.tar.gz
+gmp,http://mirrors.kernel.org/gnu/gmp/gmp-5.0.1.tar.gz,ABI=32
+mpfr,http://mirrors.kernel.org/gnu/mpfr/mpfr-3.0.0.tar.gz,ABI=32
+mpc,http://www.multiprecision.org/mpc/download/mpc-0.8.2.tar.gz,ABI=32
+gcc,http://mirrors.kernel.org/gnu/gcc/gcc-4.5.2/gcc-4.5.2.tar.gz
+
+http://mirrors.kernel.org/gnu/gettext/gettext-0.18.1.1.tar.gz
+
+
+# gawk was removed because it needed makeinfo
+# gawk,http://mirrors.kernel.org/gnu/gawk/gawk-3.0.1.tar.gz
+
+# Fetch each of these with wget and unpack them into src can be done
+# by adding this to your .netrc:
+#
+# machine mirrors.kernel.org login anonymous password pedz@easesoftware.com
+#
+# macdef fetch
+# cd $1
+# bin
+# get $2
+
+# and the do commands like:
+# echo '$fetch /gnu/gcc/gcc-4.5.2 gcc-4.5.2.tar.gz' | ftp mirrors.kernel.org
+#
+# It appears as if there is no ftp site for multiprecision.org
+
+# wget-1.12 needs getopt.  It might need libintl too.  I was hoping to
+# get wget working early in the build process but that doesn't look
+# likt its going to happen.
+
+
+ 1130  wget http://mirrors.kernel.org/gnu/make/make-3.82.tar.bz2
+ 1131  wget http://mirrors.kernel.org/gnu/gmp/gmp-5.0.1.tar.gz
+ 1132  wget http://mirrors.kernel.org/gnu/mpfr/mpfr-3.0.0.tar.gz
+ 1133  wget http://www.multiprecision.org/mpc/download/mpc-0.8.2.tar.gz
+ 1134  wget http://mirrors.kernel.org/gnu/gcc/gcc-4.5.1/gcc-4.5.1.tar.gz
+ 1135  wget http://mirrors.kernel.org/gnu/sed/sed-4.2.1.tar.gz
+ 1136  wget http://mirrors.kernel.org/gnu/gawk/gawk-3.0.1.tar.gz
+ 1137  wget http://mirrors.kernel.org/gnu/bash/bash-4.2.tar.gz
+ 1764  wget http://mirrors.kernel.org/gnu/wget/wget-1.12.tar.gz
+ 1797  wget http://mirrors.kernel.org/gnu/wget/wget-1.10.tar.gz
+ 1814  wget http://mirrors.kernel.org/gnu/libiconv/libiconv-1.13.1.tar.gz
+ 1815  wget http://mirrors.kernel.org/gnu/gettext/gettext-0.18.1.1.tar.gz
+http://cdnetworks-us-1.dl.sourceforge.net/project/expat/expat/2.0.1/expat-2.0.1.tar.gz

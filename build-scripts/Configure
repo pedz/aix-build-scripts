@@ -1,0 +1,26 @@
+#!/usr/bin/ksh
+
+# Script used to run the configure script for a package.
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+mk_log_dir
+
+if [[ -r "${DONE}" ]] ; then
+    exit 0
+fi
+
+"${build_scripts}/Journal" "${prog} called with '$@'"
+echo Calling: ${CONFIG_SHELL:-ksh} ${src_dir}/configure --prefix=${DEFAULT_PREFIX} "$@"
+(
+    echo ${prog} called with "'$@'"
+    echo ${CONFIG_SHELL:-ksh} ${src_dir}/configure --prefix=${DEFAULT_PREFIX} "$@"
+    ${CONFIG_SHELL:-ksh} ${src_dir}/configure --prefix=${DEFAULT_PREFIX} "$@" 2>&1
+    echo $?
+) | tee "${LOG}"
+
+script_done
+exit "${rc}"

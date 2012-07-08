@@ -1,0 +1,92 @@
+#!/usr/bin/ksh
+
+# A very simple script to build the sequnce leading up to and including
+# gcc.  We must build gcc 4.2.4 at this stage.  Higher levels of gcc have
+# problems.  Our build order is:
+#
+# make-3.82, bash-4.2, sed-4.2.1, tar-1.26, gcc-4.2.4, gdb-7.2
+# 
+# Make is done first since it is so key.  Bash is done next to speed up
+# the execution of the configure scripts.  Once upon a time I needed to
+# build sed to build gcc so I build it.  Some gnu imgaes do not untar
+# with AIX tar so I build it too.  Then I build gcc and gdb (not really
+# needed)
+
+export PUBLIC_BASE=/usr/work/temp
+mkdir -p ${PUBLIC_BASE}
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" skip ; then
+    exit 1
+fi
+
+# for i in make-3.82 bash-4.2 sed-4.2.1 ; do
+#     mkdir -p "${build_dir_base}/$i"
+#     cd "${build_dir_base}/$i"
+#     "${build_scripts}/Build"
+# done
+
+# make-3.82
+i=make-3.82
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build" --nocheck
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# bash-4.2
+i=bash-4.2
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# sed-4.2.1
+i=sed-4.2.1
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# tar-1.26
+i=tar-1.26
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build" --nocheck
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# gcc-4.2.4
+i=gcc-4.2.4
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build" --nocheck \
+    "--disable-nls" \
+    "--enable-threads=aix" \
+    "--with-libiconv-prefix=/usr" \
+    "--enable-languages=c,c++"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# gdb-7.2
+i=gdb-7.2
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build" --nocheck
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi

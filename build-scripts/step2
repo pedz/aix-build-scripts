@@ -1,0 +1,110 @@
+#!/usr/bin/ksh
+
+# A very simple script to build the sequnce leading up to and
+# including gcc
+
+# We prefix PATH to find what we built in step 1 (note the repeat code)
+PATH=/usr/work/temp/bin:$PATH
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" skip ; then
+    exit 1
+fi
+
+# for i in make-3.82 bash-4.2 sed-4.2.1 ; do
+#     mkdir -p "${build_dir_base}/$i"
+#     cd "${build_dir_base}/$i"
+#     "${build_scripts}/Build"
+# done
+
+# make-3.82
+i=make-3.82
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build" --nocheck
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# bash-4.2
+i=bash-4.2
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# sed-4.2.1
+i=sed-4.2.1
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# tar-1.26
+i=tar-1.26
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+"${build_scripts}/Build" --nocheck
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# gmp-5.0.2
+i=gmp-5.0.2
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+ABI=32 "${build_scripts}/Build"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# mpfr-3.0.0
+i=mpfr-3.0.0
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+ABI=32 "${build_scripts}/Build" \
+    "--with-gmp=${PUBLIC_BASE}"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# mpc-0.8.2
+i=mpc-0.8.2
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+ABI=32 "${build_scripts}/Build" \
+    "--with-gmp=${PUBLIC_BASE}" \
+    "--with-mpfr=${PUBLIC_BASE}"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi
+
+# gcc-4.5.2
+i=gcc-4.5.2
+mkdir -p "${build_dir_base}/$i"
+cd "${build_dir_base}/$i"
+export LDFLAGS="-Wl,-bbigtoc"
+"${build_scripts}/Build" --nocheck \
+    "--with-gmp=${PUBLIC_BASE}" \
+    "--with-mpfr=${PUBLIC_BASE}" \
+    "--with-mpc=${PUBLIC_BASE}" \
+    "--disable-nls" \
+    "--enable-threads=aix" \
+    "--with-libiconv-prefix=/usr" \
+    "--enable-languages=c,c++"
+rc=$?
+if [[ "${rc}" -ne 0 ]] ; then
+    exit "${rc}"
+fi

@@ -1,0 +1,23 @@
+#!/usr/bin/ksh
+
+export basedir_bit=openssh-5.8p2
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+mk_log_dir
+
+cd ${image_dir}
+if [[ ! -r $( echo "${basedir_bit}".* ) ]] ; then
+  wget http://mirror.servihoo.net/pub/OpenBSD/OpenSSH/portable/${basedir_bit}.tar.gz
+fi
+
+Unpack &&
+  mkdir -p "${build_dir}" &&
+  cd "${build_dir}" &&
+  Configure --sysconfdir=/etc/ssh &&
+  Make &&
+  Package &&
+  Install

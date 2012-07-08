@@ -1,0 +1,27 @@
+#!/usr/bin/ksh
+
+full_path=http://curl.haxx.se/download/curl-7.22.0.tar.gz
+suffix=.tar.gz
+package_name=${full_path##*/}
+export basedir_bit=${package_name%${suffix}}
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+mk_log_dir
+
+cd ${image_dir}
+if [[ ! -r "${package_name}" ]] ; then
+  wget ${full_path}
+fi
+
+Unpack &&
+  mkdir -p "${build_dir}" &&
+  cd "${build_dir}" &&
+  Configure &&
+  Make &&
+  # Test &&
+  Package &&
+  Install

@@ -1,0 +1,16 @@
+Do "step1" (the script)
+
+move build, destdir, and logs into step1-results.  You can tar them up
+and put them aside if you want to (or just delete them if you don't
+believe in Murphy).
+
+Do "step2" and repeat the above moving of the same three directories.
+
+Do "step3".  This will die when it tries to tar the tar on top of the
+tar.  I just deleted the tar from /gsa/ausgsa/projects/r/ruby/bin/tar
+and repeated step3.
+
+After that, hide or delete the same build, destdir, and logs
+directories.
+
+Now, we need to find getopt.h

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+mk_log_dir
+
+if [[ "$1" == "--nocheck" ]] ; then
+    touch "${DONE}"
+fi
+
+if [[ -r "${DONE}" ]] ; then
+    exit 0
+fi
+
+"${build_scripts}/Journal" "${prog} called with '$@'"
+(
+    echo "${prog} called with '$@'"
+    echo "${MAKE}" "$@" check
+    "${MAKE}" "$@" check 2>&1
+    echo $?
+) | tee -a "${LOG}"
+
+script_done
+exit "${rc}"

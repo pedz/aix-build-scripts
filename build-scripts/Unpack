@@ -1,0 +1,43 @@
+#!/usr/bin/ksh
+
+# A script that unpacks from images into the src directory.
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+mk_log_dir
+
+if [[ -r "${DONE}" ]] ; then
+    exit 0
+fi
+
+"${build_scripts}/Journal" "${prog} called with '$@'"
+(
+    echo ${prog} called with "'$@'"
+    pkg=$( cd "${image_dir}"; echo "${basedir}"* )
+    if [[ ! -d "${src_dir}" ]] ; then
+	if [[ ! -d "${src_dir%/*}" ]] ; then
+	    mkdir -p "${src_dir%/*}"
+	fi
+	cd "${src_dir%/*}"
+	echo Unpacking "${pkg}"
+	case "${pkg}" in
+	*.tar.gz)
+	    ( cd "${image_dir}"; gunzip < "${pkg}" ) | tar xf -
+	    ;;
+	*.tar.bz2)
+	    ( cd "${image_dir}"; bunzip2 < "${pkg}" ) | tar xf -
+	    ;;
+	*)
+	    echo "Don't know how to unpack '${pkg}'" 1>&2
+	    exit 1
+	esac
+    fi
+
+    echo $?
+) | tee "${LOG}"
+
+script_done
+exit "${rc}"

@@ -1,0 +1,29 @@
+#!/usr/bin/ksh
+
+# This script calls make install with the destination directory set.
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${0%/*}/Setup" ; then
+    exit 1
+fi
+mk_log_dir
+
+if [[ -r "${DONE}" ]] ; then
+    exit 0
+fi
+
+"${build_scripts}/Journal" "${prog} called with '$@'"
+
+destdir="${work}/destdir/${basedir_bit}"
+rm -rf "${destdir}"
+
+(
+    echo "${prog} called with '$@'"
+    echo "${MAKE}" "DESTDIR=${destdir}" "$@" install
+    "${MAKE}" "DESTDIR=${destdir}" "$@" install 2>&1
+    echo $?
+) | tee "${LOG}"
+
+script_done
+exit "${rc}"

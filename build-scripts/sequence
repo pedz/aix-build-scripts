@@ -1,0 +1,29 @@
+Starting with these in /usr/work/images
+    make-3.82
+    bash-4.2
+    sed-4.2.1
+    tar-1.26
+    gcc-4.2.4
+
+and the gcc RPM from the aix tool kit and the scripts in build-scripts
+and one patch in patches for gcc, you do "step1".
+
+That makes /usr/work/temp with a gcc that isn't brain dead.
+
+I moved build destdir and src into step1 (or you could delete them) and
+make sure that these are in images:
+    make-3.82
+    bash-4.2
+    sed-4.2.1
+    gmp-5.0.2
+    mpfr-3.0.0
+    mpc-0.8.2
+    gcc-4.5.2
+
+Then execute step2 which makes the above and puts it into PUBLIC_BASE
+
+Now, download wget-1.12 into images, unpack it into src, cd into that
+directory and execute Build from build-scripts.  wget will not compile
+"out of tree" which is why it needs special treatment.
+
+
