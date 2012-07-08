@@ -8,7 +8,7 @@ suffix=tar.gz
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 cd ${image_dir}
 if [[ ! -r "${basedir_bit}.${suffix}" ]] ; then

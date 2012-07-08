@@ -44,9 +44,17 @@ function get_full_prog
     full_prog="$( echo $full_prog | sed -e 's%/\./%/%g' )"
 }
 
-function mk_log_dir
+# I want Setup to not have any external side effects like creating
+# directories, etc because when it comes time to debug it, I don't want
+# to go clean stuff up.  So, everywhere Setup is called we follow it up
+# with a call to mk_dir_structure which creates the directies.  I have no
+# idea with the -z "$1" is intended to do.
+
+function mk_dir_structure
 {
-    if [[ ! -d "${log_dir}" && -z "$1" ]] ; then
+    if [[ -z "$1" ]] ; then
+	mkdir -p "${image_dir}"
+	mkdir -p "${src_dir_base}"
 	mkdir -p "${log_dir}"
     fi
 }

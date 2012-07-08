@@ -7,14 +7,11 @@
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 if [[ -r "${DONE}" ]] ; then
     exit 0
 fi
-
-# be sure image_dir exists
-mkdir -p "${image_dir}"
 
 "${build_scripts}/Journal" "${prog} called with '$@'"
 (

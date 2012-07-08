@@ -7,7 +7,7 @@ export basedir_bit=openssh-5.8p2
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 cd ${image_dir}
 if [[ ! -r $( echo "${basedir_bit}".* ) ]] ; then
