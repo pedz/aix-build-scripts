@@ -13,6 +13,9 @@ if [[ -r "${DONE}" ]] ; then
     exit 0
 fi
 
+# be sure image_dir exists
+mkdir -p "${image_dir}"
+
 "${build_scripts}/Journal" "${prog} called with '$@'"
 (
     echo ${prog} called with "'$@'"
