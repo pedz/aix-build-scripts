@@ -1,0 +1,3 @@
+This is a bag of scripts in build-scripts that I have used to compile
+various open source packages for AIX.  Generally, these are being used
+on AIX 6.1 TL05 and higher.
