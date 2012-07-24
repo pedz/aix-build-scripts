@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://www.ijg.org/files/jpegsrc.v8d.tar.gz
+export full_path=ftp://alpha.gnu.org/gnu/emacs/pretest/emacs-24.1-rc.tar.gz
 
 . "${0%/*}/BaseSetup"
 

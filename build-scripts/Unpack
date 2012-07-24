@@ -16,7 +16,11 @@ fi
 "${build_scripts}/Journal" "${prog} called with '$@'"
 (
     echo ${prog} called with "'$@'"
-    pkg=$( cd "${image_dir}"; echo "${basedir}"* )
+    if [[ "${package_name}x" != "x" ]] ; then
+	pkg="${package_name}"
+    else
+	pkg=$( cd "${image_dir}"; echo "${basedir}"* )
+    fi
     if [[ ! -d "${src_dir}" ]] ; then
 	if [[ ! -d "${src_dir%/*}" ]] ; then
 	    mkdir -p "${src_dir%/*}"

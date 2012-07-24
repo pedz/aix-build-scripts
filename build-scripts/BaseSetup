@@ -1,0 +1,77 @@
+#!/usr/bin/ksh
+# Source by other scripts to set up environment variables
+
+# Actually kind of a useless function.  This gets an absolute path
+# with all the .. directories removed.  It does not remove the
+# . directories.  I suppose it could.
+function get_full_prog
+{
+    typeset p1
+    typeset p2
+
+    if [[ "${1}" = /* ]] ; then
+	full_prog="${1}"
+    else
+	full_prog="${PWD}/${1}"
+    fi
+
+    while [[ "${full_prog}" = */../* ]] ; do
+	p1="${full_prog%%/../*}"
+	p2="${full_prog#*/../}"
+	full_prog="${p1%/*}/${p2}"
+    done
+    full_prog="$( echo $full_prog | sed -e 's%/\./%/%g' )"
+}
+
+# I want Setup to not have any external side effects like creating
+# directories, etc because when it comes time to debug it, I don't want
+# to go clean stuff up.  So, everywhere Setup is called we follow it up
+# with a call to mk_dir_structure which creates the directies.  I have no
+# idea with the -z "$1" is intended to do.
+
+function mk_dir_structure
+{
+    if [[ -z "$1" ]] ; then
+	mkdir -p "${image_dir}"
+	mkdir -p "${src_dir_base}"
+	mkdir -p "${log_dir}"
+	mkdir -p "${build_dir}"
+    fi
+}
+
+function get_basedir_bit
+{
+    typeset pkg="$1"
+    case "${pkg}" in
+    *.tar.gz)
+	( cd "${image_dir}"; gunzip < "${pkg}" ) | tar tf - | head -1
+	;;
+    *.tar.bz2)
+	( cd "${image_dir}"; bunzip2 < "${pkg}" ) | tar tf - | head -1
+	;;
+    *)
+	echo "Don't know how to unpack '${pkg}'" 1>&2
+	exit 1
+    esac | sed -e 's%/$%%' -e 's%^\./%%'
+}
+
+# Script sets up the paths to the base directories.
+
+# Full path to current program
+get_full_prog "${0}"
+# basename of the current program
+prog="${full_prog##*/}"
+# Directory we are currently in
+curdir=$( /bin/pwd )
+# build-scripts directory
+build_scripts="${full_prog%/$prog}"
+# work directory
+work="${build_scripts%/*}"
+# Path to where the images are
+image_dir="${work}/images"
+# Path to where the src for the package will be
+src_dir_base="${work}/src"
+# Path to destination
+dest_dir_base="${work}/destdir"
+# Path to logs
+log_dir_base="${work}/logs"

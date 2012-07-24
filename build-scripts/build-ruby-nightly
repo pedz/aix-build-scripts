@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
-full_path=http://ftp.postgresql.org/pub/source/v9.0.4/postgresql-9.0.4.tar.bz2
-suffix=.tar.bz2
+full_path=http://ftp.ruby-lang.org/pub/ruby/snapshot.tar.gz
+suffix=.tar.gz
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
 
@@ -17,15 +17,15 @@ if [[ ! -r "${package_name}" ]] ; then
   wget ${full_path}
 fi
 
-# For traditional reasons, I want this put into its own pgsql directory
-export DEFAULT_PREFIX="${DEFAULT_PREFIX}/pgsql"
+# Put in prvm/${basedir_bit} directory
+export DEFAULT_PREFIX="${PUBLIC_BASE}/prvm/${basedir_bit}"
 
 Unpack &&
+  Patch &&
   mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
-  Patch &&
-  Configure &&
+  Configure --enable-shared &&
   Make &&
-  Check &&
+  Test &&
   Package &&
   Install

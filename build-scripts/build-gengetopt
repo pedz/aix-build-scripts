@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://www.ijg.org/files/jpegsrc.v8d.tar.gz
+export full_path=http://ftp.gnu.org/gnu/gengetopt/gengetopt-2.22.5.tar.gz
 
 . "${0%/*}/BaseSetup"
 

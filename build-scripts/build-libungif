@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://www.ijg.org/files/jpegsrc.v8d.tar.gz
+export full_path=http://iweb.dl.sourceforge.net/project/giflib/libungif-4.x/libungif-4.1.4/libungif-4.1.4.tar.gz
 
 . "${0%/*}/BaseSetup"
 

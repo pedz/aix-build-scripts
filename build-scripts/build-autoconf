@@ -1,7 +1,9 @@
 #!/usr/bin/ksh
 
-export basedir_bit=pkg-config-0.27
-suffix=tar.gz
+full_path=http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+suffix=.tar.gz
+package_name=${full_path##*/}
+export basedir_bit=${package_name%${suffix}}
 
 # The if gives us a way to terminate the script if we are debugging
 # Setup by having Setup exit with a non-zero status.
@@ -11,16 +13,16 @@ fi
 mk_dir_structure
 
 cd ${image_dir}
-if [[ ! -r "${basedir_bit}.${suffix}" ]] ; then
-    wget http://pkg-config.freedesktop.org/releases/"${basedir_bit}.${suffix}"
+if [[ ! -r "${package_name}" ]] ; then
+  wget ${full_path}
 fi
 
-# The Check current has 6 failures.  I have not checked into why.
 Unpack &&
   mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
   Patch &&
-  Configure --with-internal-glib &&
+  Configure &&
   Make &&
+  Check &&
   Package &&
   Install

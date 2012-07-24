@@ -22,43 +22,6 @@ DEFAULT_PREFIX="${DEFAULT_PREFIX:=${PUBLIC_BASE}}"
 # PATH="${PUBLIC_BASE}/bin:${PUBLIC_BASE}/aixbin:${PATH}"
 PATH="${PUBLIC_BASE}/bin:${PATH}"
 
-# Actually kind of a useless function.  This gets an absolute path
-# with all the .. directories removed.  It does not remove the
-# . directories.  I suppose it could.
-function get_full_prog
-{
-    typeset p1
-    typeset p2
-
-    if [[ "${1}" = /* ]] ; then
-	full_prog="${1}"
-    else
-	full_prog="${PWD}/${1}"
-    fi
-
-    while [[ "${full_prog}" = */../* ]] ; do
-	p1="${full_prog%%/../*}"
-	p2="${full_prog#*/../}"
-	full_prog="${p1%/*}/${p2}"
-    done
-    full_prog="$( echo $full_prog | sed -e 's%/\./%/%g' )"
-}
-
-# I want Setup to not have any external side effects like creating
-# directories, etc because when it comes time to debug it, I don't want
-# to go clean stuff up.  So, everywhere Setup is called we follow it up
-# with a call to mk_dir_structure which creates the directies.  I have no
-# idea with the -z "$1" is intended to do.
-
-function mk_dir_structure
-{
-    if [[ -z "$1" ]] ; then
-	mkdir -p "${image_dir}"
-	mkdir -p "${src_dir_base}"
-	mkdir -p "${log_dir}"
-    fi
-}
-
 # Called at the end of a script to get the return value as well as
 # touch the done file if appropriate.
 function script_done
@@ -69,25 +32,14 @@ function script_done
     fi
 }
 
-# Full path to current program
-get_full_prog "${0}"
-# basename of the current program
-prog="${full_prog##*/}"
-# Directory we are currently in
-curdir=$( /bin/pwd )
+# Get all the base dirs set up
+. BaseSetup
+
 # The basename plus the bitness of the package
 basedir_bit=${basedir_bit:-${curdir##*/}}
 # The basename of the package
 basedir=${basedir_bit%-??bit}
-
-build_scripts="${full_prog%/$prog}"
-work="${build_scripts%/*}"
-
-# Path to where the images are
-image_dir="${work}/images"
-
 # Path to where the src for the package will be
-src_dir_base="${work}/src"
 src_dir="${src_dir_base}/${basedir}"
 
 # We like out of tree builds but some packages can't do that.
@@ -102,9 +54,9 @@ build_dir="${build_dir_base}/${basedir_bit}"
 
 # Path to the destination directory of the install during the
 # packaging phase
-dest_dir="${work}/destdir/${basedir_bit}"
+dest_dir="${dest_dir_base}/${basedir_bit}"
 # Path to where we keep the log files
-log_dir="${work}/logs/${basedir_bit}"
+log_dir="${log_dir_base}/${basedir_bit}"
 # Path to log file
 LOG="${log_dir}/${prog}"
 # Path to "done" file

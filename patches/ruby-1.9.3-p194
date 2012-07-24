@@ -1,0 +1,90 @@
+Only in ruby-1.9.3-p194: .files
+Only in ruby-1.9.3-p194: LOG
+diff -cr ruby-1.9.3-p194.orig/configure ruby-1.9.3-p194/configure
+*** ruby-1.9.3-p194.orig/configure	Thu Apr 19 20:33:05 2012
+--- ruby-1.9.3-p194/configure	Sun Jul 22 12:53:18 2012
+***************
+*** 16228,16240 ****
+    aix*) :
+      	: ${LDSHARED='$(CC)'}
+  			LDSHARED="$LDSHARED ${linker_flag}-G"
+! 			DLDFLAGS='-eInit_$(TARGET)'
+  			XLDFLAGS="${linker_flag}"'-bE:$(ARCHFILE)'" ${linker_flag}-brtl"
+  			XLDFLAGS="$XLDFLAGS ${linker_flag}-blibpath:${prefix}/lib:${LIBPATH:-/usr/lib:/lib}"
+  			: ${ARCHFILE="ruby.imp"}
+                          TRY_LINK='$(CC) $(LDFLAGS) -oconftest $(INCFLAGS) -I$(hdrdir) $(CPPFLAGS)'
+                          TRY_LINK="$TRY_LINK"' $(CFLAGS) $(src) $(LIBPATH) $(LOCAL_LIBS) $(LIBS)'
+! 			: ${LIBPATHENV=SHLIB_PATH}
+  			RPATHFLAG=" ${linker_flag}-blibpath:%1\$-s:${prefix}/lib:${LIBPATH:-/usr/lib:/lib}"
+  			rb_cv_dlopen=yes ;; #(
+    human*) :
+--- 16228,16240 ----
+    aix*) :
+      	: ${LDSHARED='$(CC)'}
+  			LDSHARED="$LDSHARED ${linker_flag}-G"
+! 			DLDFLAGS='-eInit_$(shell echo $(TARGET) | sed -e s/\..*// )'
+  			XLDFLAGS="${linker_flag}"'-bE:$(ARCHFILE)'" ${linker_flag}-brtl"
+  			XLDFLAGS="$XLDFLAGS ${linker_flag}-blibpath:${prefix}/lib:${LIBPATH:-/usr/lib:/lib}"
+  			: ${ARCHFILE="ruby.imp"}
+                          TRY_LINK='$(CC) $(LDFLAGS) -oconftest $(INCFLAGS) -I$(hdrdir) $(CPPFLAGS)'
+                          TRY_LINK="$TRY_LINK"' $(CFLAGS) $(src) $(LIBPATH) $(LOCAL_LIBS) $(LIBS)'
+! 			: ${LIBPATHENV=LIBPATH}
+  			RPATHFLAG=" ${linker_flag}-blibpath:%1\$-s:${prefix}/lib:${LIBPATH:-/usr/lib:/lib}"
+  			rb_cv_dlopen=yes ;; #(
+    human*) :
+***************
+*** 18947,18953 ****
+      if sed 's/\$(\([A-Za-z_][A-Za-z0-9_]*\))/${\1}/g;s/@[A-Za-z_][A-Za-z0-9_]*@//' $ruby_pc > ruby.tmp.pc &&
+  	{
+  	    test -z "$PKG_CONFIG" ||
+! 	    PKG_CONFIG_PATH=. $PKG_CONFIG --print-errors ruby.tmp
+  	}
+      then
+  	mv -f ruby.tmp.pc $ruby_pc
+--- 18947,18953 ----
+      if sed 's/\$(\([A-Za-z_][A-Za-z0-9_]*\))/${\1}/g;s/@[A-Za-z_][A-Za-z0-9_]*@//' $ruby_pc > ruby.tmp.pc &&
+  	{
+  	    test -z "$PKG_CONFIG" ||
+! 	    PKG_CONFIG_PATH=. $PKG_CONFIG --define-variable=TARGET=foo --print-errors ruby.tmp
+  	}
+      then
+  	mv -f ruby.tmp.pc $ruby_pc
+diff -cr ruby-1.9.3-p194.orig/enc/depend ruby-1.9.3-p194/enc/depend
+*** ruby-1.9.3-p194.orig/enc/depend	Wed Jun 15 19:10:10 2011
+--- ruby-1.9.3-p194/enc/depend	Sun Jul 22 12:50:00 2012
+***************
+*** 1,8 ****
+  % inplace = File.identical?($srcdir, ".")
+  % workdirs = %w"$(ENCSODIR) $(TRANSSODIR) enc enc/trans"
+  % CONFIG["WORKDIRS"] = workdirs.join(' ')
+- % CONFIG["DLDFLAGS"].sub!(/(\A|\s)(-\S+(?:\s*\w*)?\$\(TARGET\)\S*)/, '\1')
+- % dldflags = $2
+  % enable_shared = CONFIG['ENABLE_SHARED'] == 'yes'
+  % deffile = (true if /\$\(DEFFILE\)/ =~ CONFIG["LINK_SO"])
+  % encs = Dir.open($srcdir) {|d| d.grep(/.+\.c\z/)} - BUILTIN_ENCS
+--- 1,6 ----
+***************
+*** 115,125 ****
+  %     target = "$(ENCSODIR)/#{e}"
+  %     mesg = "encoding"
+  %   end
+  <%=target%>.$(DLEXT): <%=obj%>
+  	$(ECHO) linking <%=mesg%> $(@F)
+  %   cmd = link_so.sub(/\$\(OBJS\)/) {obj}
+- %   base = File.basename(e)
+- %   cmd.sub!(/(?=\$\(DLDFLAGS\))/) {dldflags.sub(/\$\(TARGET\)/) {base} + " "} if dldflags
+  %   if df
+  	$(Q)echo> <%=df%> EXPORTS
+  	$(Q)echo>> <%=df%> <%=EXPORT_PREFIX%>Init_<%=base%>
+--- 113,123 ----
+  %     target = "$(ENCSODIR)/#{e}"
+  %     mesg = "encoding"
+  %   end
++ %   base = File.basename(e)
++ <%=target%>.$(DLEXT): TARGET = <%=base%>
+  <%=target%>.$(DLEXT): <%=obj%>
+  	$(ECHO) linking <%=mesg%> $(@F)
+  %   cmd = link_so.sub(/\$\(OBJS\)/) {obj}
+  %   if df
+  	$(Q)echo> <%=df%> EXPORTS
+  	$(Q)echo>> <%=df%> <%=EXPORT_PREFIX%>Init_<%=base%>
