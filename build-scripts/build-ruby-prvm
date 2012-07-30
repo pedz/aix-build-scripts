@@ -1,21 +1,28 @@
 #!/usr/bin/ksh
 
-full_path=http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.bz2
-suffix=.tar.bz2
-package_name=${full_path##*/}
-export basedir_bit=${package_name%${suffix}}
+# Should need to set only this variable
+export full_path=http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.bz2
 
-# The if gives us a way to terminate the script if we are debugging
-# Setup by having Setup exit with a non-zero status.
-if ! . "${0%/*}/Setup" ; then
-    exit 1
-fi
-mk_dir_structure
+. "${0%/*}/BaseSetup"
 
+# basename of what we are going to fetch
+export package_name="${full_path##*/}"
+
+# fetch the package
 cd ${image_dir}
 if [[ ! -r "${package_name}" ]] ; then
   wget ${full_path}
 fi
+
+# Figure out what basedir this will produce
+export basedir_bit="$( get_basedir_bit "${package_name}" )"
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${build_scripts}/Setup" ; then
+    exit 1
+fi
+mk_dir_structure
 
 # Put in prvm/${basedir_bit} directory
 export DEFAULT_PREFIX="${PUBLIC_BASE}/prvm/${basedir_bit}"

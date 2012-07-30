@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://www.ijg.org/files/jpegsrc.v8d.tar.gz
+export full_path=http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -24,6 +24,9 @@ if ! . "${build_scripts}/Setup" ; then
     exit 1
 fi
 mk_dir_structure
+
+# Put in prvm/${basedir_bit} directory
+export DEFAULT_PREFIX="${PUBLIC_BASE}/binutils"
 
 Unpack &&
   cd "${build_dir}" &&

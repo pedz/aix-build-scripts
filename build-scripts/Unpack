@@ -22,11 +22,11 @@ fi
 	pkg=$( cd "${image_dir}"; echo "${basedir}"* )
     fi
     if [[ ! -d "${src_dir}" ]] ; then
-	if [[ ! -d "${src_dir%/*}" ]] ; then
-	    mkdir -p "${src_dir%/*}"
+	if [[ ! -d "${src_dir_base}" ]] ; then
+	    mkdir -p "${src_dir_base}"
 	fi
-	cd "${src_dir%/*}"
-	echo Unpacking "${pkg}"
+	cd "${src_dir_base}"
+	echo Unpacking "${pkg} into ${src_dir_base}"
 	case "${pkg}" in
 	*.tar.gz)
 	    ( cd "${image_dir}"; gunzip < "${pkg}" ) | tar xf -
