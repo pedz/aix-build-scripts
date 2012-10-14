@@ -28,6 +28,9 @@ fi
 	cd "${src_dir_base}"
 	echo Unpacking "${pkg} into ${src_dir_base}"
 	case "${pkg}" in
+	*.tgz)
+	    ( cd "${image_dir}"; gunzip < "${pkg}" ) | tar xf -
+	    ;;
 	*.tar.gz)
 	    ( cd "${image_dir}"; gunzip < "${pkg}" ) | tar xf -
 	    ;;

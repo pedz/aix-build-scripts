@@ -1,8 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-# export full_path=http://iweb.dl.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
-export full_path=http://hivelocity.dl.sourceforge.net/project/expat/expat/2.0.1/expat-2.0.1.tar.gz
+export full_path=http://ftp.riken.go.jp/pub/FreeBSD/distfiles/bdb/db-5.3.21.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -12,7 +11,7 @@ export package_name="${full_path##*/}"
 # fetch the package
 cd ${image_dir}
 if [[ ! -r "${package_name}" ]] ; then
-  wget ${full_path}
+  wget --no-check-certificate ${full_path}
 fi
 
 # Figure out what basedir this will produce
@@ -26,12 +25,10 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
-export CFLAGS=-pthread
-
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  CC=gcc Configure-db &&
   Make &&
   Check &&
   Package &&

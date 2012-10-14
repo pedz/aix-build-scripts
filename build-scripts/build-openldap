@@ -1,8 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-# export full_path=http://iweb.dl.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
-export full_path=http://hivelocity.dl.sourceforge.net/project/expat/expat/2.0.1/expat-2.0.1.tar.gz
+export full_path=ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.33.tgz
 
 . "${0%/*}/BaseSetup"
 
@@ -25,8 +24,6 @@ if ! . "${build_scripts}/Setup" ; then
     exit 1
 fi
 mk_dir_structure
-
-export CFLAGS=-pthread
 
 Unpack &&
   cd "${build_dir}" &&

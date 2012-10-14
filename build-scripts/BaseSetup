@@ -43,6 +43,9 @@ function get_basedir_bit
 {
     typeset pkg="$1"
     case "${pkg}" in
+    *.tgz)
+	( cd "${image_dir}"; gunzip < "${pkg}" ) | tar tf - | head -1
+	;;
     *.tar.gz)
 	( cd "${image_dir}"; gunzip < "${pkg}" ) | tar tf - | head -1
 	;;
