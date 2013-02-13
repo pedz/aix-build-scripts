@@ -52,6 +52,9 @@ function get_basedir_bit
     *.tar.bz2)
 	( cd "${image_dir}"; bunzip2 < "${pkg}" ) | tar tf - | head -1
 	;;
+    *.tar.xz)
+	( cd "${image_dir}"; unxz < "${pkg}" ) | tar tf - | head -1
+	;;
     *)
 	echo "Don't know how to unpack '${pkg}'" 1>&2
 	exit 1

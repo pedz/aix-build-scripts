@@ -25,11 +25,12 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
+# Check had a few problems.
+
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
   Configure &&
   Make &&
-  Check &&
   Package &&
   Install

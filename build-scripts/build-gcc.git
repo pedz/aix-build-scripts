@@ -1,0 +1,24 @@
+#!/usr/bin/ksh -x
+
+PUBLIC_BASE=/gsa/ausgsa/projects/p/prefix
+cd /usr/work/logs
+mv gcc.git .hide/gcc.git-$( date +%Y%m%d%H%M%S )
+cd /usr/work/build
+rm -rf gcc.git
+mkdir gcc.git
+cd gcc.git
+
+export LDFLAGS="-Wl,-bbigtoc"
+Configure \
+    "--with-gmp=${PUBLIC_BASE}" \
+    "--with-mpfr=${PUBLIC_BASE}" \
+    "--with-mpc=${PUBLIC_BASE}" \
+    "--disable-nls" \
+    "--disable-werror" \
+    "--enable-threads=aix" \
+    "--with-libiconv-prefix=/usr" \
+    "--enable-languages=c,c++"
+  Make bootstrap &&
+  Package &&
+  false &&
+  Install

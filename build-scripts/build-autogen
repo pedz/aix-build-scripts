@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://ftp.gnu.org/gnu/emacs/emacs-24.2.tar.gz
+export full_path=http://ftp.gnu.org/gnu/autogen/rel5.15/autogen-5.15.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -16,6 +16,7 @@ fi
 
 # Figure out what basedir this will produce
 export basedir_bit="$( get_basedir_bit "${package_name}" )"
+echo "basedir is ${basedir_bit}"
 
 # The if gives us a way to terminate the script if we are debugging
 # Setup by having Setup exit with a non-zero status.
