@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 
-full_path=http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
+full_path=http://ftp.gnu.org/gnu/bison/bison-2.5.1.tar.gz
 suffix=.tar.gz
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
@@ -10,19 +10,19 @@ export basedir_bit=${package_name%${suffix}}
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 cd ${image_dir}
 if [[ ! -r "${package_name}" ]] ; then
   wget ${full_path}
 fi
 
-# The Check current has 6 failures.  I have not checked into why.
 Unpack &&
   mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
   Patch &&
   Configure &&
   Make &&
+  Check &&
   Package &&
   Install

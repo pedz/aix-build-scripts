@@ -1,0 +1,458 @@
+diff -cr passenger-3.0.14.orig/ext/apache2/Hooks.cpp passenger-3.0.14/ext/apache2/Hooks.cpp
+*** passenger-3.0.14.orig/ext/apache2/Hooks.cpp	Sat Jul 21 13:27:37 2012
+--- passenger-3.0.14/ext/apache2/Hooks.cpp	Tue Jul 31 16:24:44 2012
+***************
+*** 491,504 ****
+  					len = strlen(filename);
+  					if (len > 0 && filename[len - 1] == '/') {
+  						pageCacheFile = apr_pstrcat(r->pool, filename,
+! 							"index.html", NULL);
+  					} else {
+  						pageCacheFile = apr_pstrcat(r->pool, filename,
+! 							".html", NULL);
+  					}
+  				} else {
+  					pageCacheFile = apr_pstrcat(r->pool, filename,
+! 						".html", NULL);
+  				}
+  				if (!fileExists(pageCacheFile)) {
+  					pageCacheFile = NULL;
+--- 491,504 ----
+  					len = strlen(filename);
+  					if (len > 0 && filename[len - 1] == '/') {
+  						pageCacheFile = apr_pstrcat(r->pool, filename,
+! 									    "index.html", (char *)NULL);
+  					} else {
+  						pageCacheFile = apr_pstrcat(r->pool, filename,
+! 									    ".html", (char *)NULL);
+  					}
+  				} else {
+  					pageCacheFile = apr_pstrcat(r->pool, filename,
+! 								    ".html", (char *)NULL);
+  				}
+  				if (!fileExists(pageCacheFile)) {
+  					pageCacheFile = NULL;
+***************
+*** 948,954 ****
+  	 * Convert an HTTP header name to a CGI environment name.
+  	 */
+  	char *httpToEnv(apr_pool_t *p, const char *headerName) {
+! 		char *result  = apr_pstrcat(p, "HTTP_", headerName, NULL);
+  		char *current = result + sizeof("HTTP_") - 1;
+  		
+  		while (*current != '\0') {
+--- 948,954 ----
+  	 * Convert an HTTP header name to a CGI environment name.
+  	 */
+  	char *httpToEnv(apr_pool_t *p, const char *headerName) {
+! 		char *result  = apr_pstrcat(p, "HTTP_", headerName, (char *)NULL);
+  		char *current = result + sizeof("HTTP_") - 1;
+  		
+  		while (*current != '\0') {
+***************
+*** 1049,1055 ****
+  		} else {
+  			const char *request_uri;
+  			if (r->args != NULL) {
+! 				request_uri = apr_pstrcat(r->pool, escapedUri, "?", r->args, NULL);
+  			} else {
+  				request_uri = escapedUri;
+  			}
+--- 1049,1055 ----
+  		} else {
+  			const char *request_uri;
+  			if (r->args != NULL) {
+! 				request_uri = apr_pstrcat(r->pool, escapedUri, "?", r->args, (char *)NULL);
+  			} else {
+  				request_uri = escapedUri;
+  			}
+diff -cr passenger-3.0.14.orig/ext/boost/src/pthread/once.cpp passenger-3.0.14/ext/boost/src/pthread/once.cpp
+*** passenger-3.0.14.orig/ext/boost/src/pthread/once.cpp	Sat Jul 21 13:27:37 2012
+--- passenger-3.0.14/ext/boost/src/pthread/once.cpp	Tue Jul 31 16:26:08 2012
+***************
+*** 20,26 ****
+          namespace
+          {
+              pthread_key_t epoch_tss_key;
+!             pthread_once_t epoch_tss_key_flag=PTHREAD_ONCE_INIT;
+              
+              extern "C" void delete_epoch_tss_data(void* data)
+              {
+--- 20,26 ----
+          namespace
+          {
+              pthread_key_t epoch_tss_key;
+! 	    pthread_once_t epoch_tss_key_flag={PTHREAD_ONCE_INIT};
+              
+              extern "C" void delete_epoch_tss_data(void* data)
+              {
+diff -cr passenger-3.0.14.orig/ext/common/IniFile.h passenger-3.0.14/ext/common/IniFile.h
+*** passenger-3.0.14.orig/ext/common/IniFile.h	Sat Jul 21 13:27:37 2012
+--- passenger-3.0.14/ext/common/IniFile.h	Tue Jul 31 16:30:36 2012
+***************
+*** 149,155 ****
+  	ifstream iniFileStream;
+  
+  	char lastAcceptedChar;
+! 	char upcomingChar;
+  	bool upcomingTokenPtrIsStale;
+  
+  	int currentLine;
+--- 149,155 ----
+  	ifstream iniFileStream;
+  
+  	char lastAcceptedChar;
+! 	int upcomingChar;
+  	bool upcomingTokenPtrIsStale;
+  
+  	int currentLine;
+***************
+*** 158,164 ****
+  	TokenPtr upcomingTokenPtr;
+  
+  	void expect(char ch) {
+! 		char upcomingChar = (char)iniFileStream.peek();
+  	
+  		if (ch != upcomingChar) {
+  			switch(upcomingChar) {
+--- 158,164 ----
+  	TokenPtr upcomingTokenPtr;
+  
+  	void expect(char ch) {
+! 		int upcomingChar = iniFileStream.peek();
+  	
+  		if (ch != upcomingChar) {
+  			switch(upcomingChar) {
+***************
+*** 176,185 ****
+  	}
+  
+  	void accept() {
+! 		if ((int) upcomingChar == EOF) return;
+  	
+  		lastAcceptedChar = (char)iniFileStream.get();
+! 		upcomingChar     = (char)iniFileStream.peek();
+  		currentColumn++;
+  	
+  		if (lastAcceptedChar == '\n') {
+--- 176,185 ----
+  	}
+  
+  	void accept() {
+! 		if (upcomingChar == EOF) return;
+  	
+  		lastAcceptedChar = (char)iniFileStream.get();
+! 		upcomingChar     = iniFileStream.peek();
+  		currentColumn++;
+  	
+  		if (lastAcceptedChar == '\n') {
+***************
+*** 189,197 ****
+  	}
+  
+  	void ignore() {
+! 		if ((int) upcomingChar == EOF) return;
+  	
+! 		upcomingChar = (char)iniFileStream.peek();
+  		currentColumn++;
+  	
+  		if ((char)iniFileStream.get() == '\n') {
+--- 189,197 ----
+  	}
+  
+  	void ignore() {
+! 		if (upcomingChar == EOF) return;
+  	
+! 		upcomingChar = iniFileStream.peek();
+  		currentColumn++;
+  	
+  		if ((char)iniFileStream.get() == '\n') {
+***************
+*** 261,267 ****
+  		int column = currentColumn;
+  		string result;
+  	
+! 		while (upcomingChar != '\n' && (int) upcomingChar != EOF) {
+  			result.append(1, upcomingChar);
+  			accept();
+  		}
+--- 261,267 ----
+  		int column = currentColumn;
+  		string result;
+  	
+! 		while (upcomingChar != '\n' && upcomingChar != EOF) {
+  			result.append(1, upcomingChar);
+  			accept();
+  		}
+***************
+*** 282,288 ****
+  		int column = currentColumn;
+  		string result;
+  	
+! 		while ((int) upcomingChar != EOF) {
+  			result.append(1, upcomingChar);
+  			accept();
+  		}
+--- 282,288 ----
+  		int column = currentColumn;
+  		string result;
+  	
+! 		while (upcomingChar != EOF) {
+  			result.append(1, upcomingChar);
+  			accept();
+  		}
+***************
+*** 332,338 ****
+  		}
+  	
+  		while (iniFileStream.good()) {
+! 			upcomingChar = (char)iniFileStream.peek();
+  			switch(upcomingChar) {
+  				case '[':
+  					return tokenizeSection();
+--- 332,338 ----
+  		}
+  	
+  		while (iniFileStream.good()) {
+! 			upcomingChar = iniFileStream.peek();
+  			switch(upcomingChar) {
+  				case '[':
+  					return tokenizeSection();
+diff -cr passenger-3.0.14.orig/ext/common/LoggingAgent/LoggingServer.h passenger-3.0.14/ext/common/LoggingAgent/LoggingServer.h
+*** passenger-3.0.14.orig/ext/common/LoggingAgent/LoggingServer.h	Sat Jul 21 13:27:37 2012
+--- passenger-3.0.14/ext/common/LoggingAgent/LoggingServer.h	Tue Jul 31 12:43:37 2012
+***************
+*** 780,786 ****
+  	}
+  	
+  	bool isDirectory(const string &dir, struct dirent *entry) const {
+! 		#ifdef __sun__
+  			string path = dir;
+  			path.append("/");
+  			path.append(entry->d_name);
+--- 780,786 ----
+  	}
+  	
+  	bool isDirectory(const string &dir, struct dirent *entry) const {
+! 		#if defined(__sun__) || defined(_AIX)
+  			string path = dir;
+  			path.append("/");
+  			path.append(entry->d_name);
+diff -cr passenger-3.0.14.orig/ext/libev/ev++.h passenger-3.0.14/ext/libev/ev++.h
+*** passenger-3.0.14.orig/ext/libev/ev++.h	Sat Jul 21 13:27:38 2012
+--- passenger-3.0.14/ext/libev/ev++.h	Tue Jul 31 12:43:37 2012
+***************
+*** 53,58 ****
+--- 53,61 ----
+  #if EV_USE_STDEXCEPT
+  # include <stdexcept>
+  #endif
++ #ifdef STAT
++ #undef STAT
++ #endif
+  
+  namespace ev {
+  
+diff -cr passenger-3.0.14.orig/ext/libev/ev.c passenger-3.0.14/ext/libev/ev.c
+*** passenger-3.0.14.orig/ext/libev/ev.c	Sat Jul 21 13:27:38 2012
+--- passenger-3.0.14/ext/libev/ev.c	Tue Jul 31 12:43:37 2012
+***************
+*** 607,613 ****
+  typedef struct
+  {
+    W w;
+!   int events; /* the pending event set for the given watcher */
+  } ANPENDING;
+  
+  #if EV_USE_INOTIFY
+--- 607,613 ----
+  typedef struct
+  {
+    W w;
+!   int ap_events; /* the pending event set for the given watcher */
+  } ANPENDING;
+  
+  #if EV_USE_INOTIFY
+***************
+*** 822,834 ****
+    int pri = ABSPRI (w_);
+  
+    if (expect_false (w_->pending))
+!     pendings [pri][w_->pending - 1].events |= revents;
+    else
+      {
+        w_->pending = ++pendingcnt [pri];
+        array_needsize (ANPENDING, pendings [pri], pendingmax [pri], w_->pending, EMPTY2);
+        pendings [pri][w_->pending - 1].w      = w_;
+!       pendings [pri][w_->pending - 1].events = revents;
+      }
+  }
+  
+--- 822,834 ----
+    int pri = ABSPRI (w_);
+  
+    if (expect_false (w_->pending))
+!     pendings [pri][w_->pending - 1].ap_events |= revents;
+    else
+      {
+        w_->pending = ++pendingcnt [pri];
+        array_needsize (ANPENDING, pendings [pri], pendingmax [pri], w_->pending, EMPTY2);
+        pendings [pri][w_->pending - 1].w      = w_;
+!       pendings [pri][w_->pending - 1].ap_events = revents;
+      }
+  }
+  
+***************
+*** 866,872 ****
+  
+    for (w = (ev_io *)anfd->head; w; w = (ev_io *)((WL)w)->next)
+      {
+!       int ev = w->events & revents;
+  
+        if (ev)
+          ev_feed_event (EV_A_ (W)w, ev);
+--- 866,872 ----
+  
+    for (w = (ev_io *)anfd->head; w; w = (ev_io *)((WL)w)->next)
+      {
+!       int ev = w->ei_events & revents;
+  
+        if (ev)
+          ev_feed_event (EV_A_ (W)w, ev);
+***************
+*** 907,913 ****
+        unsigned char events = 0;
+  
+        for (w = (ev_io *)anfd->head; w; w = (ev_io *)((WL)w)->next)
+!         events |= (unsigned char)w->events;
+  
+  #if EV_SELECT_IS_WINSOCKET
+        if (events)
+--- 907,913 ----
+        unsigned char events = 0;
+  
+        for (w = (ev_io *)anfd->head; w; w = (ev_io *)((WL)w)->next)
+!         events |= (unsigned char)w->ei_events;
+  
+  #if EV_SELECT_IS_WINSOCKET
+        if (events)
+***************
+*** 1994,2000 ****
+          /* ^ this is no longer true, as pending_w could be here */
+  
+          p->w->pending = 0;
+!         EV_CB_INVOKE (p->w, p->events);
+          EV_FREQUENT_CHECK;
+        }
+  }
+--- 1994,2000 ----
+          /* ^ this is no longer true, as pending_w could be here */
+  
+          p->w->pending = 0;
+!         EV_CB_INVOKE (p->w, p->ap_events);
+          EV_FREQUENT_CHECK;
+        }
+  }
+***************
+*** 2462,2468 ****
+        ANPENDING *p = pendings [ABSPRI (w_)] + pending - 1;
+        p->w = (W)&pending_w;
+        w_->pending = 0;
+!       return p->events;
+      }
+    else
+      return 0;
+--- 2462,2468 ----
+        ANPENDING *p = pendings [ABSPRI (w_)] + pending - 1;
+        p->w = (W)&pending_w;
+        w_->pending = 0;
+!       return p->ap_events;
+      }
+    else
+      return 0;
+***************
+*** 2503,2509 ****
+      return;
+  
+    assert (("libev: ev_io_start called with negative fd", fd >= 0));
+!   assert (("libev: ev_io start called with illegal event mask", !(w->events & ~(EV__IOFDSET | EV_READ | EV_WRITE))));
+  
+    EV_FREQUENT_CHECK;
+  
+--- 2503,2509 ----
+      return;
+  
+    assert (("libev: ev_io_start called with negative fd", fd >= 0));
+!   assert (("libev: ev_io start called with illegal event mask", !(w->ei_events & ~(EV__IOFDSET | EV_READ | EV_WRITE))));
+  
+    EV_FREQUENT_CHECK;
+  
+***************
+*** 2511,2518 ****
+    array_needsize (ANFD, anfds, anfdmax, fd + 1, array_init_zero);
+    wlist_add (&anfds[fd].head, (WL)w);
+  
+!   fd_change (EV_A_ fd, w->events & EV__IOFDSET | EV_ANFD_REIFY);
+!   w->events &= ~EV__IOFDSET;
+  
+    EV_FREQUENT_CHECK;
+  }
+--- 2511,2518 ----
+    array_needsize (ANFD, anfds, anfdmax, fd + 1, array_init_zero);
+    wlist_add (&anfds[fd].head, (WL)w);
+  
+!   fd_change (EV_A_ fd, w->ei_events & EV__IOFDSET | EV_ANFD_REIFY);
+!   w->ei_events &= ~EV__IOFDSET;
+  
+    EV_FREQUENT_CHECK;
+  }
+diff -cr passenger-3.0.14.orig/ext/libev/ev.h passenger-3.0.14/ext/libev/ev.h
+*** passenger-3.0.14.orig/ext/libev/ev.h	Sat Jul 21 13:27:38 2012
+--- passenger-3.0.14/ext/libev/ev.h	Tue Jul 31 12:43:37 2012
+***************
+*** 236,242 ****
+    EV_WATCHER_LIST (ev_io)
+  
+    int fd;     /* ro */
+!   int events; /* ro */
+  } ev_io;
+  
+  /* invoked after a specific time, repeatable (based on monotonic clock) */
+--- 236,242 ----
+    EV_WATCHER_LIST (ev_io)
+  
+    int fd;     /* ro */
+!   int ei_events; /* ro */
+  } ev_io;
+  
+  /* invoked after a specific time, repeatable (based on monotonic clock) */
+***************
+*** 579,585 ****
+    ev_set_cb ((ev), cb_);			\
+  } while (0)
+  
+! #define ev_io_set(ev,fd_,events_)            do { (ev)->fd = (fd_); (ev)->events = (events_) | EV__IOFDSET; } while (0)
+  #define ev_timer_set(ev,after_,repeat_)      do { ((ev_watcher_time *)(ev))->at = (after_); (ev)->repeat = (repeat_); } while (0)
+  #define ev_periodic_set(ev,ofs_,ival_,rcb_)  do { (ev)->offset = (ofs_); (ev)->interval = (ival_); (ev)->reschedule_cb = (rcb_); } while (0)
+  #define ev_signal_set(ev,signum_)            do { (ev)->signum = (signum_); } while (0)
+--- 579,585 ----
+    ev_set_cb ((ev), cb_);			\
+  } while (0)
+  
+! #define ev_io_set(ev,fd_,events_)            do { (ev)->fd = (fd_); (ev)->ei_events = (events_) | EV__IOFDSET; } while (0)
+  #define ev_timer_set(ev,after_,repeat_)      do { ((ev_watcher_time *)(ev))->at = (after_); (ev)->repeat = (repeat_); } while (0)
+  #define ev_periodic_set(ev,ofs_,ival_,rcb_)  do { (ev)->offset = (ofs_); (ev)->interval = (ival_); (ev)->reschedule_cb = (rcb_); } while (0)
+  #define ev_signal_set(ev,signum_)            do { (ev)->signum = (signum_); } while (0)
+diff -cr passenger-3.0.14.orig/lib/phusion_passenger/platform_info/compiler.rb passenger-3.0.14/lib/phusion_passenger/platform_info/compiler.rb
+*** passenger-3.0.14.orig/lib/phusion_passenger/platform_info/compiler.rb	Sat Jul 21 13:27:38 2012
+--- passenger-3.0.14/lib/phusion_passenger/platform_info/compiler.rb	Tue Jul 31 12:43:37 2012
+***************
+*** 52,57 ****
+--- 52,58 ----
+  	end
+  	
+  	def self.compiler_supports_visibility_flag?
++ 		return false if RUBY_PLATFORM =~ /aix/
+  		return try_compile(:c, '', '-fvisibility=hidden')
+  	end
+  	memoize :compiler_supports_visibility_flag?, true

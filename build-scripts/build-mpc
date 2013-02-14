@@ -1,0 +1,41 @@
+#!/usr/bin/ksh
+
+# Should need to set only this variable
+export full_path=http://www.multiprecision.org/mpc/download/mpc-1.0.1.tar.gz
+
+. "${0%/*}/BaseSetup"
+
+# basename of what we are going to fetch
+export package_name="${full_path##*/}"
+
+# fetch the package
+cd ${image_dir}
+if [[ ! -r "${package_name}" ]] ; then
+  wget ${full_path}
+fi
+
+# Figure out what basedir this will produce
+base_basedir_bit="$( get_basedir_bit "${package_name}" )"
+export basedir_bit="${base_basedir_bit}-32bit"
+echo "basedir is ${basedir_bit}"
+
+# The if gives us a way to terminate the script if we are debugging
+# Setup by having Setup exit with a non-zero status.
+if ! . "${build_scripts}/Setup" ; then
+    exit 1
+fi
+mk_dir_structure
+
+# This errors off and I'm not sure why
+#  Check &&
+
+ABI=32
+Unpack &&
+  cd "${build_dir}" &&
+  Patch &&
+  Configure \
+    "--with-gmp=${PUBLIC_BASE}" \
+    "--with-mpfr=${PUBLIC_BASE}" &&
+  Make &&
+  Package &&
+  Install

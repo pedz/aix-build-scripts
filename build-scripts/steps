@@ -7,8 +7,7 @@ believe in Murphy).
 Do "step2" and repeat the above moving of the same three directories.
 
 Do "step3".  This will die when it tries to tar the tar on top of the
-tar.  I just deleted the tar from /gsa/ausgsa/projects/r/ruby/bin/tar
-and repeated step3.
+tar.  I just deleted the tar from ${PUBLIC_BASE} and repeated step3.
 
 After that, hide or delete the same build, destdir, and logs
 directories.

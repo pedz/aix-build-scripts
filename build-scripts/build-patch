@@ -7,7 +7,7 @@ export basedir_bit=patch-2.6.1
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 cd ${image_dir}
 if [[ ! -r $( echo "${basedir_bit}".* ) ]] ; then

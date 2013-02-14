@@ -1,0 +1,48 @@
+diff --git a/memcached.c b/memcached.c
+index 23b771a..07fcb90 100644
+--- a/memcached.c
++++ b/memcached.c
+@@ -5139,7 +5139,7 @@ int main (int argc, char **argv) {
+         exit(EX_OSERR);
+     }
+     /* start up worker threads if MT mode */
+-    thread_init(settings.num_threads, main_base);
++    memcached_thread_init(settings.num_threads, main_base);
+ 
+     if (start_assoc_maintenance_thread() == -1) {
+         exit(EXIT_FAILURE);
+diff --git a/memcached.h b/memcached.h
+index 8a51352..5fbba02 100644
+--- a/memcached.h
++++ b/memcached.h
+@@ -511,7 +511,7 @@ static inline int mutex_lock(pthread_mutex_t *mutex)
+  * also #define-d to directly call the underlying code in singlethreaded mode.
+  */
+ 
+-void thread_init(int nthreads, struct event_base *main_base);
++void memcached_thread_init(int nthreads, struct event_base *main_base);
+ int  dispatch_event_add(int thread, conn *c);
+ void dispatch_conn_new(int sfd, enum conn_states init_state, int event_flags, int read_buffer_size, enum network_transport transport);
+ 
+diff --git a/thread.c b/thread.c
+index 4e3e239..c23a11d 100644
+--- a/thread.c
++++ b/thread.c
+@@ -368,7 +368,7 @@ static void setup_thread(LIBEVENT_THREAD *me) {
+ static void *worker_libevent(void *arg) {
+     LIBEVENT_THREAD *me = arg;
+ 
+-    /* Any per-thread setup can happen here; thread_init() will block until
++    /* Any per-thread setup can happen here; memcached_thread_init() will block until
+      * all threads have finished initializing.
+      */
+ 
+@@ -769,7 +769,7 @@ void slab_stats_aggregate(struct thread_stats *stats, struct slab_stats *out) {
+  * nthreads  Number of worker event handler threads to spawn
+  * main_base Event base for main thread
+  */
+-void thread_init(int nthreads, struct event_base *main_base) {
++void memcached_thread_init(int nthreads, struct event_base *main_base) {
+     int         i;
+     int         power;
+ 

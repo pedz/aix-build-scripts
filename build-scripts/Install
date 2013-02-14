@@ -9,7 +9,7 @@
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 if [[ -r "${DONE}" ]] ; then
     exit 0

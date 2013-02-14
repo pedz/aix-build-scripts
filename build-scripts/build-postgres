@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 
-full_path=http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v9.0.4/postgresql-9.0.4.tar.bz2
+full_path=http://ftp.postgresql.org/pub/source/v9.0.4/postgresql-9.0.4.tar.bz2
 suffix=.tar.bz2
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
@@ -10,7 +10,7 @@ export basedir_bit=${package_name%${suffix}}
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 cd ${image_dir}
 if [[ ! -r "${package_name}" ]] ; then

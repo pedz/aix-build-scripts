@@ -14,7 +14,7 @@ export basedir_bit=gnutls-2.12.8
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 mkdir -p "${build_dir}"
 cd "${build_dir}"

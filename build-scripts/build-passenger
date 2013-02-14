@@ -1,0 +1,8 @@
+
+# Closer to "notes" on how to build passenger than an actual script (at
+# this point).
+export APXS2=${PUBLIC_BASE}/apache2/bin/apxs 
+delete-path $( dirname $( type -path ld ) )
+cd ${PUBLIC_BASE}/prvm/ruby-1.9.3-p194/lib/ruby/gems/1.9.1/gems/passenger-3.0.14e
+# rake apache2:clean apache2 2>&1 | tee RAKE_LOG
+# echo $?

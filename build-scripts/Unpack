@@ -7,7 +7,7 @@
 if ! . "${0%/*}/Setup" ; then
     exit 1
 fi
-mk_log_dir
+mk_dir_structure
 
 if [[ -r "${DONE}" ]] ; then
     exit 0
@@ -16,19 +16,29 @@ fi
 "${build_scripts}/Journal" "${prog} called with '$@'"
 (
     echo ${prog} called with "'$@'"
-    pkg=$( cd "${image_dir}"; echo "${basedir}"* )
+    if [[ "${package_name}x" != "x" ]] ; then
+	pkg="${package_name}"
+    else
+	pkg=$( cd "${image_dir}"; echo "${basedir}"* )
+    fi
     if [[ ! -d "${src_dir}" ]] ; then
-	if [[ ! -d "${src_dir%/*}" ]] ; then
-	    mkdir -p "${src_dir%/*}"
+	if [[ ! -d "${src_dir_base}" ]] ; then
+	    mkdir -p "${src_dir_base}"
 	fi
-	cd "${src_dir%/*}"
-	echo Unpacking "${pkg}"
+	cd "${src_dir_base}"
+	echo Unpacking "${pkg} into ${src_dir_base}"
 	case "${pkg}" in
+	*.tgz)
+	    ( cd "${image_dir}"; gunzip < "${pkg}" ) | tar xf -
+	    ;;
 	*.tar.gz)
 	    ( cd "${image_dir}"; gunzip < "${pkg}" ) | tar xf -
 	    ;;
 	*.tar.bz2)
 	    ( cd "${image_dir}"; bunzip2 < "${pkg}" ) | tar xf -
+	    ;;
+	*.tar.xz)
+	    ( cd "${image_dir}"; xz < "${pkg}" ) | tar xf -
 	    ;;
 	*)
 	    echo "Don't know how to unpack '${pkg}'" 1>&2
