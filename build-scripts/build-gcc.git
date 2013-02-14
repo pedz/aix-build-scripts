@@ -1,8 +1,10 @@
 #!/usr/bin/ksh -x
 
-PUBLIC_BASE=/gsa/ausgsa/projects/p/prefix
+export PUBLIC_BASE=/gsa/ausgsa/projects/p/prefix
 cd /usr/work/logs
-mv gcc.git .hide/gcc.git-$( date +%Y%m%d%H%M%S )
+if [[ -d gcc.git ]] ; then
+  mv gcc.git .hide/gcc.git-$( date +%Y%m%d%H%M%S )
+fi
 cd /usr/work/build
 rm -rf gcc.git
 mkdir gcc.git

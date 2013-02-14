@@ -1,9 +1,14 @@
 #!/usr/bin/ksh
 # Source by other scripts to set up environment variables
 
-# PUBLIC_BASE is what will be used for ``prefix'' -- it is the base of where
-# the new code will be installed.
-PUBLIC_BASE=${PUBLIC_BASE:-/gsa/ausgsa/projects/r/ruby}
+# PUBLIC_BASE needs to be set in the environment to the target directory
+# which will be used for prefix most of the time
+
+if [[ -z "${PUBLIC_BASE}" ]] ; then
+  echo PUBLIC_BASE must be set 1>&2
+  exit 1
+fi
+
 DEFAULT_PREFIX="${DEFAULT_PREFIX:=${PUBLIC_BASE}}"
 
 # The default is to do an out of tree build but for those packages that
@@ -13,6 +18,8 @@ DEFAULT_PREFIX="${DEFAULT_PREFIX:=${PUBLIC_BASE}}"
 # but can be overridden by settings basedir_bit before sourceing this
 # script.  Usually exporting is good since scripts call other scripts
 # which may call Setup back again.
+
+# To specify a bit-ness, suffix it with -NNbit.  e.g. gcc-4.3.2-32bit
 
 # "work" is the parent of where these build scripts reside.  See "tree-diagram"
 # of the layout of the work tree.
@@ -73,10 +80,11 @@ if [[ -x "${PUBLIC_BASE}/bin/make" ]] ; then
 elif [[ -x "${PUBLIC_BASE}/bin/gmake" ]] ; then
     MAKE="${PUBLIC_BASE}/bin/gmake"
 else
-    MAKE=/usr/bin/make
+    # Just let the path pick the make
+    MAKE=make
 fi
 
-if false ; then
+if true ; then
   echo "full_prog=${full_prog}"
   echo "prog=${prog}"
   echo "build_scripts=${build_scripts}"

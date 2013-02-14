@@ -1,2 +1,2 @@
 prepend-path /usr/work/build-scripts
-prepend-path /gsa/ausgsa/projects/r/ruby/bin
+prepend-path "${PUBLIC_BASE}/bin"

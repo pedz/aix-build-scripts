@@ -1,29 +1,29 @@
 # How the tree looks.
 
-/gsa/ausgsa/projects/r/ruby: the base of the whole tree.  This will
+${PUBLIC_BASE}: the base of the whole tree.  This will
 correspond to /usr/local so this will be used as PREFIX.
 
-/gsa/ausgsa/projects/r/ruby/work : Work related files where the
+${PUBLIC_BASE}/work : Work related files where the
 source, build scripts, and download images will be held
 
-/gsa/ausgsa/projects/r/ruby/work/build-scripts : The build scripts
+${PUBLIC_BASE}/work/build-scripts : The build scripts
 
-/gsa/ausgsa/projects/r/ruby/work/packages : This is the top of the
+${PUBLIC_BASE}/work/packages : This is the top of the
 tree for each package.  A package is something like "make-3.82" or
 "bash-4.2" or "gcc-4.5.2".
 
-/gsa/ausgsa/projects/r/ruby/work/packages/* : for example
-/gsa/ausgsa/projects/r/ruby/work/packages/make-3.82
+${PUBLIC_BASE}/work/packages/* : for example
+${PUBLIC_BASE}/work/packages/make-3.82
 
-/gsa/ausgsa/projects/r/ruby/work/packages/*/src :
-/gsa/ausgsa/projects/r/ruby/work/packages/*/build :
-/gsa/ausgsa/projects/r/ruby/work/packages/*/destdir : Right now, each
+${PUBLIC_BASE}/work/packages/*/src :
+${PUBLIC_BASE}/work/packages/*/build :
+${PUBLIC_BASE}/work/packages/*/destdir : Right now, each
 of these repeats the name of the package twice.  I'm not sure I like
 that.  For example, for make-3.82, the set of directories will be:
 
-/gsa/ausgsa/projects/r/ruby/work/packages/make-3.82/src/make-3.82
-/gsa/ausgsa/projects/r/ruby/work/packages/make-3.82/build/make-3.82
-/gsa/ausgsa/projects/r/ruby/work/packages/make-3.82/destdir/make-3.82
+${PUBLIC_BASE}/work/packages/make-3.82/src/make-3.82
+${PUBLIC_BASE}/work/packages/make-3.82/build/make-3.82
+${PUBLIC_BASE}/work/packages/make-3.82/destdir/make-3.82
 
-/gsa/ausgsa/projects/r/ruby/work/images : directory of the download
+${PUBLIC_BASE}/work/images : directory of the download
 images

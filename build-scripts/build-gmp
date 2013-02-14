@@ -15,7 +15,8 @@ if [[ ! -r "${package_name}" ]] ; then
 fi
 
 # Figure out what basedir this will produce
-export basedir_bit="$( get_basedir_bit "${package_name}" )"
+base_basedir_bit="$( get_basedir_bit "${package_name}" )"
+export basedir_bit="${base_basedir_bit}-32bit"
 echo "basedir is ${basedir_bit}"
 
 # The if gives us a way to terminate the script if we are debugging
@@ -25,6 +26,7 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
+export ABI=32
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
