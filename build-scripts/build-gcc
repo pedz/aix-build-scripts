@@ -36,6 +36,7 @@ Unpack &&
     "--disable-nls" \
     "--enable-threads=aix" \
     "--with-libiconv-prefix=/usr" \
+    "--enable-__cxa_atexit" \
     "--enable-languages=c,c++"
   Make &&
   Package &&

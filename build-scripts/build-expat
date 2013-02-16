@@ -33,6 +33,7 @@ Unpack &&
   Patch &&
   Configure &&
   Make &&
+  false &&
   Check &&
   Package &&
   Install

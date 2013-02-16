@@ -25,6 +25,7 @@ Unpack &&
   cd "${build_dir}" &&
   Patch &&
   Configure &&
+  false &&
   Make &&
   Check &&
   Package &&
