@@ -84,7 +84,7 @@ else
     MAKE=make
 fi
 
-if true ; then
+if false ; then
   echo "full_prog=${full_prog}"
   echo "prog=${prog}"
   echo "build_scripts=${build_scripts}"

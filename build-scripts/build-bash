@@ -1,0 +1,54 @@
+#!/usr/bin/ksh
+
+# Should need to set only this variable
+export full_path=http://ftp.gnu.org/gnu/bash/bash-4.2.tar.gz
+
+. "${0%/*}/BaseSetup"
+
+# basename of what we are going to fetch
+export package_name="${full_path##*/}"
+
+# fetch the package
+cd ${image_dir}
+if [[ ! -r "${package_name}" ]] ; then
+  wget ${full_path}
+fi
+if [[ ! -d bash-4.2-patches ]] ; then
+  wget -r -np -nH --cut-dirs=2 http://ftp.gnu.org/gnu/bash/bash-4.2-patches/
+fi
+
+# Figure out what basedir this will produce
+export basedir_bit="$( get_basedir_bit "${package_name}" )"
+echo "basedir is ${basedir_bit}"
+
+# Setup can exit with 1 during debugging which will terminate this
+# script
+. "${build_scripts}/Setup"
+mk_dir_structure
+
+function apply_patches
+{
+  find ${image_dir}/bash-4.2-patches -type f -print |
+    egrep 'bash42-[0-9][0-9][0-9]$' |
+    while read p ; do
+      b="${p##*/}"
+      if [[ ! -r "${image_dir}/bash-4.2-patches/$b-out" ]] ; then
+	echo "Applying $b"
+	if ! patch -p0 < "$p" > "${image_dir}/bash-4.2-patches/$b-out" ; then
+	  return 1
+	fi
+      fi
+    done
+  return 0
+}
+
+Unpack &&
+  cd "${src_dir}" &&
+  apply_patches &&
+  cd "${build_dir}" &&
+  Patch &&
+  Configure &&
+  Make &&
+  Check &&
+  Package &&
+  Install
