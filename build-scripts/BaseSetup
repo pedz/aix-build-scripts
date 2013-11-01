@@ -35,7 +35,9 @@ function mk_dir_structure
 	mkdir -p "${image_dir}"
 	mkdir -p "${src_dir_base}"
 	mkdir -p "${log_dir}"
-	mkdir -p "${build_dir}"
+	if [[ "${build}" != "src" ]] ; then
+	    mkdir -p "${build_dir}"
+	fi
     fi
 }
 
@@ -54,6 +56,9 @@ function get_basedir_bit
 	;;
     *.tar.xz)
 	( cd "${image_dir}"; unxz < "${pkg}" ) | tar tf - | head -1
+	;;
+    *.tar.lz)
+	( cd "${image_dir}"; lzip -d < "${pkg}" ) | tar tf - | head -1
 	;;
     *)
 	echo "Don't know how to unpack '${pkg}'" 1>&2

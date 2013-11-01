@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://ftp.gnu.org/gnu/emacs/emacs-24.3.tar.gz
+export full_path=http://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p0.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -24,11 +24,18 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
+# Put in prvm/${basedir_bit} directory
+export DEFAULT_PREFIX="${PUBLIC_BASE}/prvm/${basedir_bit}"
+
+#  cd "${src_dir}" &&
+#  rm -r ext/-test-/load test/-ext-/load &&
+
 Unpack &&
-  cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  mkdir -p "${build_dir}" &&
+  cd "${build_dir}" &&
+  Configure --enable-shared &&
   Make &&
-  Check &&
+  ( Test || true ) &&
   Package &&
   Install

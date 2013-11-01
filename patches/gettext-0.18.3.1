@@ -1,0 +1,41 @@
+Only in gettext-0.18.3.1-new: .files
+diff -cr gettext-0.18.3.1/gettext-tools/gnulib-lib/float.in.h gettext-0.18.3.1-new/gettext-tools/gnulib-lib/float.in.h
+*** gettext-0.18.3.1/gettext-tools/gnulib-lib/float.in.h	Thu Aug 15 11:24:52 2013
+--- gettext-0.18.3.1-new/gettext-tools/gnulib-lib/float.in.h	Wed Aug 28 11:27:22 2013
+***************
+*** 146,156 ****
+--- 146,159 ----
+  
+     Unfortunately, this is not a constant expression, and the latter expression
+     does not work well when GCC is optimizing..  */
++ #ifndef BLAH
++ #define BLAH
+  union gl_long_double_union
+    {
+      struct { double hi; double lo; } dd;
+      long double ld;
+    };
++ #endif
+  extern const union gl_long_double_union gl_LDBL_MAX;
+  # define LDBL_MAX (gl_LDBL_MAX.ld)
+  #endif
+diff -cr gettext-0.18.3.1/gettext-tools/libgettextpo/float.in.h gettext-0.18.3.1-new/gettext-tools/libgettextpo/float.in.h
+*** gettext-0.18.3.1/gettext-tools/libgettextpo/float.in.h	Thu Aug 15 11:26:08 2013
+--- gettext-0.18.3.1-new/gettext-tools/libgettextpo/float.in.h	Wed Aug 28 11:27:34 2013
+***************
+*** 146,156 ****
+--- 146,159 ----
+  
+     Unfortunately, this is not a constant expression, and the latter expression
+     does not work well when GCC is optimizing..  */
++ #ifndef BLAH
++ #define BLAH
+  union gl_long_double_union
+    {
+      struct { double hi; double lo; } dd;
+      long double ld;
+    };
++ #endif
+  extern const union gl_long_double_union gl_LDBL_MAX;
+  # define LDBL_MAX (gl_LDBL_MAX.ld)
+  #endif

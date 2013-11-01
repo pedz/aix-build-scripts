@@ -1,0 +1,32 @@
+diff -cr nettle-2.5-orig/configure nettle-2.5/configure
+*** nettle-2.5-orig/configure	Sat Jul  7 08:27:54 2012
+--- nettle-2.5/configure	Sun Apr  7 09:39:37 2013
+***************
+*** 4606,4618 ****
+      LIBNETTLE_FORLINK=libnettle.so
+      LIBNETTLE_SONAME='$(LIBNETTLE_FORLINK).$(LIBNETTLE_MAJOR)'
+      LIBNETTLE_FILE='$(LIBNETTLE_SONAME).$(LIBNETTLE_MINOR)'
+!     LIBNETTLE_LINK='$(CC) $(LDFLAGS) -shared -Wl,-soname=$(LIBNETTLE_SONAME)'
+      LIBNETTLE_LIBS=''
+  
+      LIBHOGWEED_FORLINK=libhogweed.so
+      LIBHOGWEED_SONAME='$(LIBHOGWEED_FORLINK).$(LIBHOGWEED_MAJOR)'
+      LIBHOGWEED_FILE='$(LIBHOGWEED_SONAME).$(LIBHOGWEED_MINOR)'
+!     LIBHOGWEED_LINK='$(CC) $(LDFLAGS) -L. -shared -Wl,-soname=$(LIBHOGWEED_SONAME)'
+      # Requested by debian, to make linking with only -lhogweed work
+      # (does not work in general, e.g., with static linking all of
+      # -lhogweed -lgmp -lnettle are still required). Also makes dlopen
+--- 4606,4618 ----
+      LIBNETTLE_FORLINK=libnettle.so
+      LIBNETTLE_SONAME='$(LIBNETTLE_FORLINK).$(LIBNETTLE_MAJOR)'
+      LIBNETTLE_FILE='$(LIBNETTLE_SONAME).$(LIBNETTLE_MINOR)'
+!     LIBNETTLE_LINK='$(CC) $(LDFLAGS) -shared'
+      LIBNETTLE_LIBS=''
+  
+      LIBHOGWEED_FORLINK=libhogweed.so
+      LIBHOGWEED_SONAME='$(LIBHOGWEED_FORLINK).$(LIBHOGWEED_MAJOR)'
+      LIBHOGWEED_FILE='$(LIBHOGWEED_SONAME).$(LIBHOGWEED_MINOR)'
+!     LIBHOGWEED_LINK='$(CC) $(LDFLAGS) -L. -shared'
+      # Requested by debian, to make linking with only -lhogweed work
+      # (does not work in general, e.g., with static linking all of
+      # -lhogweed -lgmp -lnettle are still required). Also makes dlopen

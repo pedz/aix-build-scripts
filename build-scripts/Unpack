@@ -38,7 +38,10 @@ fi
 	    ( cd "${image_dir}"; bunzip2 < "${pkg}" ) | tar xf -
 	    ;;
 	*.tar.xz)
-	    ( cd "${image_dir}"; xz < "${pkg}" ) | tar xf -
+	    ( cd "${image_dir}"; unxz < "${pkg}" ) | tar xf -
+	    ;;
+	*.tar.lz)
+	    ( cd "${image_dir}"; lzip -d < "${pkg}" ) | tar xf -
 	    ;;
 	*)
 	    echo "Don't know how to unpack '${pkg}'" 1>&2

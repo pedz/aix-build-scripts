@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 
-full_path=http://git-core.googlecode.com/files/git-1.7.7.tar.gz
+full_path=http://git-core.googlecode.com/files/git-1.8.4.tar.gz
 suffix=.tar.gz
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}

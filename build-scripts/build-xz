@@ -1,5 +1,8 @@
 #!/usr/bin/ksh
 
+# After xz is built, the "rl" script needs to be run to fix the
+# executables.
+
 # Should need to set only this variable
 export full_path=http://tukaani.org/xz/xz-5.0.4.tar.bz2
 

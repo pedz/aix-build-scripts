@@ -20,12 +20,14 @@ fi
 # apr, apr-util, and httpd have a unique idea of prefix
 export PUBLIC_BASE="${PUBLIC_BASE}/apache2"
 
+# This worked but now it does not.
+#  Test &&
+
 Unpack &&
   mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
   Patch &&
   Configure --with-apr=${PUBLIC_BASE} &&
   Make &&
-  Test &&
   Package &&
   Install

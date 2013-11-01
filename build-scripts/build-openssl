@@ -1,19 +1,27 @@
 #!/usr/bin/ksh
 
-export basedir_bit=openssl-1.0.0e
-export build=src
+# Should need to set only this variable
+export full_path=http://www.openssl.org/source/openssl-1.0.1e.tar.gz
 
-# The if gives us a way to terminate the script if we are debugging
-# Setup by having Setup exit with a non-zero status.
-if ! . "${0%/*}/Setup" ; then
-    exit 1
-fi
-mk_dir_structure
+. "${0%/*}/BaseSetup"
 
+# basename of what we are going to fetch
+export package_name="${full_path##*/}"
+
+# fetch the package
 cd ${image_dir}
-if [[ ! -r "${basedir_bit}.tar.gz" ]] ; then
-    wget "http://www.openssl.org/source/${basedir_bit}.tar.gz"
+if [[ ! -r "${package_name}" ]] ; then
+  wget ${full_path}
 fi
+
+# Figure out what basedir this will produce
+export basedir_bit="$( get_basedir_bit "${package_name}" )"
+echo "basedir is ${basedir_bit}"
+
+# Setup can exit with 1 during debugging which will terminate this
+# script
+. "${build_scripts}/Setup"
+mk_dir_structure
 
 Unpack &&
   cd "${src_dir}" &&

@@ -1,8 +1,3 @@
-SAMPLE
-berkdb
-gcc.git
-grep
-httpd-2.4.2
 iconv
 libgc
 libgif
@@ -16,4 +11,3 @@ ruby-prvm
 ruby-snapshot
 wget2
 xxx-emacs
-xz

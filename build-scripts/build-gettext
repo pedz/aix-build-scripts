@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 
-full_path=http://ftp.gnu.org/pub/gnu/gettext/gettext-0.18.1.1.tar.gz
+full_path=http://ftp.gnu.org/gnu/gettext/gettext-0.18.3.1.tar.gz
 suffix=.tar.gz
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
