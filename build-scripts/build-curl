@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 
-full_path=http://curl.haxx.se/download/curl-7.22.0.tar.gz
+full_path=http://curl.haxx.se/download/curl-7.36.0.tar.gz
 suffix=.tar.gz
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
@@ -20,7 +20,7 @@ fi
 Unpack &&
   mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
-  Configure &&
+  Configure --with-ca-path="${DEFAULT_PREFIX}/lib/openssl/certs" &&
   Make &&
   # Test &&
   Package &&

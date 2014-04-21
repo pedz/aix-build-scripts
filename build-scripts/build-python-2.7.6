@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://mirror.esc7.net/pub/OpenBSD/OpenSSH/portable/openssh-6.6p1.tar.gz
+export full_path=http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz
 
 . "${0%/*}/BaseSetup"
 
@@ -20,16 +20,16 @@ echo "basedir is ${basedir_bit}"
 
 # Setup can exit with 1 during debugging which will terminate this
 # script
+export build=src
 . "${build_scripts}/Setup"
 mk_dir_structure
 
-#  Check &&
-
+# Test &&
+export CC=gcc
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure --with-ssl-dir=${DEFAULT_PREFIX}/lib --sysconfdir=/etc/ssh &&
-  false &&
+  Configure &&
   Make &&
   Package &&
   Install

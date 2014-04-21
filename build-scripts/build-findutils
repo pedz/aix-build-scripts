@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://mirror.esc7.net/pub/OpenBSD/OpenSSH/portable/openssh-6.6p1.tar.gz
+export full_path=http://ftp.gnu.org/gnu/findutils/findutils-4.4.2.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -23,13 +23,15 @@ echo "basedir is ${basedir_bit}"
 . "${build_scripts}/Setup"
 mk_dir_structure
 
+export DEFAULT_PREFIX="${PUBLIC_BASE}/findutils"
+
+# One test failure -- reported.
 #  Check &&
 
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure --with-ssl-dir=${DEFAULT_PREFIX}/lib --sysconfdir=/etc/ssh &&
-  false &&
+  Configure &&
   Make &&
   Package &&
   Install

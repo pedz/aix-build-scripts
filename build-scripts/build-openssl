@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+export full_path=https://www.openssl.org/source/openssl-1.0.1g.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -25,7 +25,7 @@ mk_dir_structure
 
 Unpack &&
   cd "${src_dir}" &&
-  ./config --prefix=${PUBLIC_BASE} --openssldir=${PUBLIC_BASE}/lib/openssl &&
+  ./config --prefix=${PUBLIC_BASE} --openssldir=${PUBLIC_BASE}/lib/openssl --shared &&
   Make &&
   Test &&
   Package INSTALL_PREFIX=${dest_dir} &&

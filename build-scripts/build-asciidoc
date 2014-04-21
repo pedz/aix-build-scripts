@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://mirror.esc7.net/pub/OpenBSD/OpenSSH/portable/openssh-6.6p1.tar.gz
+export full_path=http://softlayer-dal.dl.sourceforge.net/project/asciidoc/asciidoc/8.6.9/asciidoc-8.6.9.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -20,16 +20,15 @@ echo "basedir is ${basedir_bit}"
 
 # Setup can exit with 1 during debugging which will terminate this
 # script
+export build=src
 . "${build_scripts}/Setup"
 mk_dir_structure
-
-#  Check &&
 
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure --with-ssl-dir=${DEFAULT_PREFIX}/lib --sysconfdir=/etc/ssh &&
-  false &&
+  Configure &&
   Make &&
+  Test &&
   Package &&
   Install

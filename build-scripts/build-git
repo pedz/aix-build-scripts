@@ -1,28 +1,30 @@
 #!/usr/bin/ksh
 
-full_path=http://git-core.googlecode.com/files/git-1.8.4.tar.gz
-suffix=.tar.gz
-package_name=${full_path##*/}
-export basedir_bit=${package_name%${suffix}}
-export build=src
+# Should need to set only this variable
+export full_path=https://www.kernel.org/pub/software/scm/git/git-1.9.2.tar.xz
 
-# The if gives us a way to terminate the script if we are debugging
-# Setup by having Setup exit with a non-zero status.
-if ! . "${0%/*}/Setup" ; then
-    exit 1
-fi
-mk_dir_structure
+. "${0%/*}/BaseSetup"
 
+# basename of what we are going to fetch
+export package_name="${full_path##*/}"
+
+# fetch the package
 cd ${image_dir}
 if [[ ! -r "${package_name}" ]] ; then
   wget ${full_path}
 fi
 
-  # Can't test without Python it seems.
-  # Test &&
+# Figure out what basedir this will produce
+export basedir_bit="$( get_basedir_bit "${package_name}" )"
+echo "basedir is ${basedir_bit}"
+
+# Setup can exit with 1 during debugging which will terminate this
+# script
+export build=src
+. "${build_scripts}/Setup"
+mk_dir_structure
 
 Unpack &&
-  mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
   Patch &&
   Configure &&
