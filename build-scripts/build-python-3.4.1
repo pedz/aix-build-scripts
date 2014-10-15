@@ -1,7 +1,11 @@
 #!/usr/bin/ksh
+#
+# turned on shared libraries but build does not appear to work for
+# out of tree builds.  Lost interest.
+#
 
 # Should need to set only this variable
-export full_path=http://ftp.gnu.org/gnu/coreutils/coreutils-8.23.tar.xz
+export full_path=https://www.python.org/ftp/python/3.4.1/Python-3.4.1.tgz
 
 . "${0%/*}/BaseSetup"
 
@@ -20,18 +24,17 @@ echo "basedir is ${basedir_bit}"
 
 # Setup can exit with 1 during debugging which will terminate this
 # script
+export build=src
 . "${build_scripts}/Setup"
 mk_dir_structure
 
-export DEFAULT_PREFIX="${PUBLIC_BASE}/findutils"
-
-# four test failures
-#  Check &&
+# Failed tests
+#  Test &&
 
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  CC=gcc Configure --enable-shared &&
   Make &&
   Package &&
   Install

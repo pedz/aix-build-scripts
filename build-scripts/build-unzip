@@ -1,0 +1,12 @@
+Download from here:
+
+ftp://ftp.info-zip.org/pub/infozip/src/unzip60.tgz
+
+I did:
+
+make -f unix/Makefile gcc
+
+But I also added -DNO_LCHMOD to the CCFLAGS of the gcc stanza.
+
+        $(MAKE) unzips CC=gcc LD=gcc CFLAGS="-O3 -DNO_LCHMOD" LF2=""
+

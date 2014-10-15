@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://ftp.gnu.org/gnu/coreutils/coreutils-8.23.tar.xz
+export full_path=http://hivelocity.dl.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920.tar.bz2
 
 . "${0%/*}/BaseSetup"
 
@@ -23,15 +23,11 @@ echo "basedir is ${basedir_bit}"
 . "${build_scripts}/Setup"
 mk_dir_structure
 
-export DEFAULT_PREFIX="${PUBLIC_BASE}/findutils"
-
-# four test failures
-#  Check &&
-
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
   Configure &&
   Make &&
+  Check &&
   Package &&
   Install
