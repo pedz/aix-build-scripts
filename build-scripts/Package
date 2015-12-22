@@ -15,13 +15,12 @@ fi
 
 "${build_scripts}/Journal" "${prog} called with '$@'"
 
-destdir="${work}/destdir/${basedir_bit}"
-rm -rf "${destdir}"
+rm -rf "${dest_dir}"
 
 (
     echo "${prog} called with '$@'"
-    echo "${MAKE}" "DESTDIR=${destdir}" "$@" install
-    "${MAKE}" "DESTDIR=${destdir}" "$@" install 2>&1
+    echo "${MAKE}" "DESTDIR=${dest_dir}" "$@" install
+    "${MAKE}" "DESTDIR=${dest_dir}" "$@" install 2>&1
     echo $?
 ) | tee "${LOG}"
 

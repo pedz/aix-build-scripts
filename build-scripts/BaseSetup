@@ -41,6 +41,7 @@ function mk_dir_structure
     fi
 }
 
+# Finds the base directory that the tar file creates.
 function get_basedir_bit
 {
     typeset pkg="$1"
@@ -83,6 +84,6 @@ image_dir="${work}/images"
 # Path to where the src for the package will be
 src_dir_base="${work}/src"
 # Path to destination
-dest_dir_base="${work}/destdir"
+dest_dir_base="${work}${host_area}/destdir"
 # Path to logs
-log_dir_base="${work}/logs"
+log_dir_base="${work}${host_area}/logs"

@@ -1,6 +1,7 @@
 build-scripts/journal.log
 build/*
 destdir/*
+ecurep/*
 images/*
 logs/*
 src/*

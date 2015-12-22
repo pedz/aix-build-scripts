@@ -55,7 +55,7 @@ src_dir="${src_dir_base}/${basedir}"
 if [[ "$PWD" = "${src_dir_base}/${basedir_bit}" || "${build}" = "src" ]] ; then
     build_dir_base="${src_dir_base}"
 else
-    build_dir_base="${work}/build"
+    build_dir_base="${work}${host_area}/build"
 fi
 build_dir="${build_dir_base}/${basedir_bit}"
 
@@ -85,17 +85,23 @@ else
 fi
 
 if false ; then
-  echo "full_prog=${full_prog}"
-  echo "prog=${prog}"
-  echo "build_scripts=${build_scripts}"
-  echo "work=${work}"
-  echo "curdir=${curdir}"
-  echo "basedir_bit=${basedir_bit}"
-  echo "basedir=${basedir}"
-  echo "src_dir_base=${src_dir_base}"
-  echo "src_dir=${src_dir}"
-  echo "build_dir_base=${build_dir_base}"
-  echo "build_dir=${build_dir}"
-  echo "log_dir=${log_dir}"
-  exit 1
+    echo "PUBLIC_BASE=${PUBLIC_BASE}"
+    echo "DEFAULT_PREFIX=${DEFAULT_PREFIX}"
+    echo "full_prog=${full_prog}"
+    echo "prog=${prog}"
+    echo "build_scripts=${build_scripts}"
+    echo "work=${work}"
+    echo "host_area=${host_area}"
+    echo "curdir=${curdir}"
+    echo "basedir_bit=${basedir_bit}"
+    echo "basedir=${basedir}"
+    echo "src_dir_base=${src_dir_base}"
+    echo "src_dir=${src_dir}"
+    echo "build_dir_base=${build_dir_base}"
+    echo "build_dir=${build_dir}"
+    echo "dest_dir_base=${dest_dir_base}"
+    echo "dest_dir=${dest_dir}"
+    echo "log_dir_base=${log_dir_base}"
+    echo "log_dir=${log_dir}"
+    exit 1
 fi
