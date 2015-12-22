@@ -1,0 +1,6 @@
+The scripts in here may or may not work -- usually they do.  But I want
+to modify them and change their destination directory to be more
+specific.  e.g. the prvm scripts need to somehow specify a prvm
+specific destination directory so they don't get mingled with the other
+versions.  And the ecurep versions need to do the same thing.  Plus,
+I'll have something for blue diamond.
