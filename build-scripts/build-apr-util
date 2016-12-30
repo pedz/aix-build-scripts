@@ -29,5 +29,4 @@ Unpack &&
   Patch &&
   Configure --with-apr=${PUBLIC_BASE} &&
   Make &&
-  Package &&
-  Install
+  Package

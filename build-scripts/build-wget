@@ -1,23 +1,35 @@
 #!/usr/bin/ksh
 
-# Use this before you have a wget or openssl
+# Should need to set only this variable
+export full_path=http://ftp.gnu.org/gnu/wget/wget-1.18.tar.xz
 
-export basedir_bit=wget-1.13
+. "${0%/*}/BaseSetup"
 
-# The if gives us a way to terminate the script if we are debugging
-# Setup by having Setup exit with a non-zero status.
-if ! . "${0%/*}/Setup" ; then
-    exit 1
+# basename of what we are going to fetch
+export package_name="${full_path##*/}"
+
+# fetch the package
+cd ${image_dir}
+if [[ ! -r "${package_name}" ]] ; then
+  wget ${full_path}
 fi
+
+# Figure out what basedir this will produce
+export basedir_bit="$( get_basedir_bit "${package_name}" )"
+echo "basedir is ${basedir_bit}"
+
+# Setup can exit with 1 during debugging which will terminate this
+# script
+# Uncomment for packages that can not do out of tree builds
+# export build=src
+. "${build_scripts}/Setup"
 mk_dir_structure
 
-mkdir -p "${build_dir}"
-cd "${build_dir}"
+#  Check &&
 
-# The Check current has 6 failures.  I have not checked into why.
 Unpack &&
+  cd "${build_dir}" &&
   Patch &&
-  Configure --without-ssl &&
+  Configure &&
   Make &&
-  Package &&
-  Install
+  Package

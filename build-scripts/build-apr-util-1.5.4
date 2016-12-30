@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 
-full_path=http://apache.mirrors.tds.net/apr/apr-1.4.6.tar.bz2
+full_path=http://apache.mirrors.tds.net/apr/apr-util-1.5.4.tar.bz2
 suffix=.tar.bz2
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
@@ -17,16 +17,17 @@ if [[ ! -r "${package_name}" ]] ; then
   wget ${full_path}
 fi
 
-# testsock is failing
-#  Test &&
-
 # apr, apr-util, and httpd have a unique idea of prefix
-export PUBLIC_BASE="${PUBLIC_BASE}/apache2"
+export PUBLIC_BASE="${PUBLIC_BASE}/apache2.4.2"
+
+# This worked but now it does not.
+#  Test &&
 
 Unpack &&
   mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
   Patch &&
-  Configure "--with-installbuilddir=${PUBLIC_BASE}/build" &&
+  Configure --with-apr=${PUBLIC_BASE} &&
   Make &&
-  Package
+  Package &&
+  Install

@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=https://www.kernel.org/pub/software/scm/git/git-2.5.1.tar.xz
+export full_path=http://www.kernel.org/pub/software/scm/git/git-2.10.2.tar.xz
 
 . "${0%/*}/BaseSetup"
 
@@ -11,7 +11,10 @@ export package_name="${full_path##*/}"
 # fetch the package
 cd ${image_dir}
 if [[ ! -r "${package_name}" ]] ; then
-  wget ${full_path}
+  if ! wget --no-check-certificate ${full_path} ; then
+    echo "wget of ${full_path} failed" 1>&2
+    exit 1
+  fi
 fi
 
 # Figure out what basedir this will produce

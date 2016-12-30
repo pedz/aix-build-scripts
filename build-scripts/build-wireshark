@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.bz2
+export full_path=https://1.na.dl.wireshark.org/src/wireshark-2.2.2.tar.bz2
 
 . "${0%/*}/BaseSetup"
 
@@ -20,13 +20,15 @@ echo "basedir is ${basedir_bit}"
 
 # Setup can exit with 1 during debugging which will terminate this
 # script
+# Uncomment for packages that can not do out of tree builds
+# export build=src
 . "${build_scripts}/Setup"
 mk_dir_structure
 
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure --enable-utf --enable-unicode-properties &&
+  Configure --disable-wireshark &&
   Make &&
   Check &&
   Package &&

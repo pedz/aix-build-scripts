@@ -8,7 +8,7 @@
 # pkg-config is also required.
 
 # Should need to set only this variable
-export full_path=ftp://ftp.gnutls.org/gcrypt/gnutls/v3.1/gnutls-3.1.10.tar.xz
+export full_path=ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.16.tar.xz
 
 . "${0%/*}/BaseSetup"
 
@@ -36,7 +36,7 @@ mk_dir_structure
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  Configure --with-included-libtasn1 --without-p11-kit &&
   Make &&
   Package &&
   Install

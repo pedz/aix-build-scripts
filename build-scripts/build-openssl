@@ -1,7 +1,21 @@
 #!/usr/bin/ksh
 
+function fix_lib
+{
+  (
+      cd ${dest_dir}${PUBLIC_BASE}/lib
+      cp libcrypto.so shr.o
+      ar r *crypto.a shr.o
+      rm -f shr.o
+      cp libssl.so shr.o
+      ar r *ssl.a shr.o
+      rm -f shr.o
+  )
+}
+
 # Should need to set only this variable
-export full_path=https://www.openssl.org/source/openssl-1.0.1g.tar.gz
+export full_path=https://www.openssl.org/source/openssl-1.0.2j.tar.gz
+#https://www.openssl.org/source/openssl-1.0.1t.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -23,10 +37,11 @@ echo "basedir is ${basedir_bit}"
 . "${build_scripts}/Setup"
 mk_dir_structure
 
+# Test &&
 Unpack &&
   cd "${src_dir}" &&
   ./config --prefix=${PUBLIC_BASE} --openssldir=${PUBLIC_BASE}/lib/openssl --shared &&
   Make &&
-  Test &&
   Package INSTALL_PREFIX=${dest_dir} &&
+  fix_lib &&
   Install

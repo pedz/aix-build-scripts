@@ -1,7 +1,13 @@
 #!/usr/bin/ksh
 
+if [[ -x "${PUBLIC_BASE}/bin/bash" ]]; then
+    export CONFIG_SHELL="${PUBLIC_BASE}/bin/bash"
+fi
+export PUBLIC_BASE="/shared/pedzan/ruby-2.2.3"
+export host_area="/blue-diamond/normal"
+
 # Should need to set only this variable
-export full_path=http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.bz2
+export full_path=ftp://ftp.gnu.org/gnu/gmp/gmp-5.1.1.tar.bz2
 
 . "${0%/*}/BaseSetup"
 
@@ -15,7 +21,9 @@ if [[ ! -r "${package_name}" ]] ; then
 fi
 
 # Figure out what basedir this will produce
-export basedir_bit="$( get_basedir_bit "${package_name}" )"
+base_basedir_bit="$( get_basedir_bit "${package_name}" )"
+export basedir_bit="${base_basedir_bit}-32bit"
+echo "basedir is ${basedir_bit}"
 
 # The if gives us a way to terminate the script if we are debugging
 # Setup by having Setup exit with a non-zero status.
@@ -24,18 +32,12 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
-# Put in prvm/${basedir_bit} directory
-export DEFAULT_PREFIX="${PUBLIC_BASE}/prvm/${basedir_bit}"
-
-#  cd "${src_dir}" &&
-#  rm -r ext/-test-/load test/-ext-/load &&
-
+export ABI=32
 Unpack &&
-  Patch &&
-  mkdir -p "${build_dir}" &&
   cd "${build_dir}" &&
-  Configure --enable-shared &&
+  Patch &&
+  Configure &&
   Make &&
-  Test &&
+  Check &&
   Package &&
   Install

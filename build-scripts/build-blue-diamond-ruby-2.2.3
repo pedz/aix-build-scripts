@@ -1,7 +1,13 @@
 #!/usr/bin/ksh
 
+if [[ -x "${PUBLIC_BASE}/bin/bash" ]]; then
+    export CONFIG_SHELL="${PUBLIC_BASE}/bin/bash"
+fi
+export PUBLIC_BASE="/shared/pedzan/ruby-2.2.3"
+export host_area="/blue-diamond/normal"
+
 # Should need to set only this variable
-export full_path=http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.gz
+export full_path=https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -24,11 +30,16 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
+export LDFLAGS=-Wl,-bmaxdata:0x80000000
+
+#   Make || ( PATH=/gsa/ausgsa/projects/r/ruby/hide-aixbin:$PATH Make miniruby ) &&
+
 Unpack &&
-  cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  mkdir -p "${build_dir}" &&
+  cd "${build_dir}" &&
+  Configure --enable-shared --with-gmp=${PUBLIC_BASE} &&
   Make &&
-  Check &&
+  ( Test || true ) &&
   Package &&
   Install

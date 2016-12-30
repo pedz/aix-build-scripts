@@ -20,6 +20,8 @@ echo "basedir is ${basedir_bit}"
 
 # Setup can exit with 1 during debugging which will terminate this
 # script
+# Uncomment for packages that can not do out of tree builds
+# export build=src
 . "${build_scripts}/Setup"
 mk_dir_structure
 

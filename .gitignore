@@ -1,3 +1,6 @@
+.du
+.files
+blue-diamond/*
 build-scripts/journal.log
 build/*
 destdir/*

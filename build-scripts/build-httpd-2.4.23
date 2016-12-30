@@ -4,7 +4,7 @@
 # building this.  If you build this first, it dies when it tries to
 # package it because the needed libraries are not installed.
 
-full_path=http://mirrors.ibiblio.org/apache/httpd/httpd-2.4.2.tar.bz2
+full_path=http://mirrors.ibiblio.org/apache/httpd/httpd-2.4.23.tar.bz2
 suffix=.tar.bz2
 package_name=${full_path##*/}
 export basedir_bit=${package_name%${suffix}}
@@ -24,7 +24,7 @@ fi
 # NOTE -- next type use DEFAULT_PREFIX instead of this tap dance
 # apr, apr-util, and httpd have a unique idea of prefix
 ORIG_PUBLIC_BASE=${PUBLIC_BASE}
-A=apache2.4.2
+A=apache2.4.23
 export PUBLIC_BASE="${PUBLIC_BASE}/$A"
 
 Unpack &&

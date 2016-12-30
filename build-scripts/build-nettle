@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://www.lysator.liu.se/~nisse/archive/nettle-2.5.tar.gz
+export full_path=https://ftp.gnu.org/gnu/nettle/nettle-3.3.tar.gz
 
 . "${0%/*}/BaseSetup"
 
