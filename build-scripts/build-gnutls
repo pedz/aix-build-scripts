@@ -36,7 +36,10 @@ mk_dir_structure
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure --with-included-libtasn1 --without-p11-kit &&
+  Configure \
+    --with-default-trust-store-dir="${DEFAULT_PREFIX}/lib/openssl/certs" \
+    --with-included-libtasn1 \
+    --without-p11-kit &&
   Make &&
   Package &&
   Install

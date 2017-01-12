@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://ftp.gnome.org/pub/gnome/sources/glib/2.50/glib-2.50.2.tar.xz
+export full_path=http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -14,9 +14,15 @@ if [[ ! -r "${package_name}" ]] ; then
   wget ${full_path}
 fi
 
+export ABI=32
 # Figure out what basedir this will produce
-export basedir_bit="$( get_basedir_bit "${package_name}" )"
+export basedir_bit="$( get_basedir_bit "${package_name}" )-${ABI}bit"
 echo "basedir is ${basedir_bit}"
+
+if [[ "$ABI" -eq 64 ]] ; then
+  export CFLAGS=-maix64
+  export OBJECT_MODE=64
+fi
 
 # Setup can exit with 1 during debugging which will terminate this
 # script
@@ -33,4 +39,5 @@ Unpack &&
   Configure &&
   Make &&
   Package &&
+  false &&
   Install

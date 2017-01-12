@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
+export full_path=http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz
 
 . "${0%/*}/BaseSetup"
 

@@ -30,6 +30,7 @@ mk_dir_structure
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  Configure --with-ssl=gnutls &&
   Make &&
-  Package
+  Package &&
+  Install

@@ -1,8 +1,7 @@
 #!/usr/bin/ksh
 
 # Should need to set only this variable
-export full_path=http://downloads.sourceforge.net/libpng/libpng-1.6.26.tar.xz
-# export full_path=ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.6.26.tar.gz
+export full_path=http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.gz
 
 . "${0%/*}/BaseSetup"
 
@@ -25,11 +24,17 @@ if ! . "${build_scripts}/Setup" ; then
 fi
 mk_dir_structure
 
+export CFLAGS=-maix64
+export OBJECT_MODE=64
+#  --with-jpeg=no --with-png=no --with-gif=no --with-tiff=no was
+# added because I don't have the libraries compiled for them yet.
+
 Unpack &&
   cd "${build_dir}" &&
   Patch &&
-  Configure &&
+  Configure --with-jpeg=no --with-png=no --with-gif=no --with-tiff=no &&
   Make &&
+  false &&
   Check &&
   Package &&
   Install
